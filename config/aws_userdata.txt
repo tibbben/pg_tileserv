@@ -18,18 +18,19 @@ Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment; filename="userdata.txt"
 
 #!/bin/bash
-sudo yum update -y
-sudo yum install git -y
-sudo yum install gcc -y
+yum update -y
+yum install git -y
+yum install gcc -y
 
-cd /home/ec2-user
+HOME=/home/ec2-user
+cd $HOME
 
-sudo curl https://www.sqlite.org/2020/sqlite-autoconf-3320300.tar.gz
-sudo tar xzf - sqlite-autoconf-3320300.tar.gz
-sudo cd ./sqlite-autoconf-3320300
-sudo ./configure
-sudo make
-sudo make install
+curl https://www.sqlite.org/2020/sqlite-autoconf-3320300.tar.gz > sqlite-autoconf-3320300.tar.gz
+tar -xzf sqlite-autoconf-3320300.tar.gz
+cd ./sqlite-autoconf-3320300
+./configure
+make
+make install
 cd ..
 #sudo rm -rf ./sqlite-autoconf-3320300
 #sudo rm sqlite-autoconf-3320300.tar.gz
@@ -38,13 +39,14 @@ git config --global user.name "tibbben"
 git config --global user.email tibben@ocf.berkeley.edu
 git config --global credential.helper store
 
-sudo amazon-linux-extras install docker
-sudo usermod -a -G docker ec2-user
-sudo service docker start
-sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+amazon-linux-extras install docker
+usermod -a -G docker ec2-user
+service docker start
+curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
 
 git clone https://github.com/tibbben/pg_tileserv.git
+chown -R ec2-user:ec2-user pg_tileserv
 cd pg_tileserv/examples/docker
 sudo /usr/local/bin/docker-compose build
 sudo /usr/local/bin/docker-compose up

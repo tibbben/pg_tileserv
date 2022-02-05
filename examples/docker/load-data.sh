@@ -26,7 +26,7 @@ cp ../openlayers/openlayers-function-click.sql ./data/
 rm ./data/openlayers-function-click.sql
 
 # Load SVI
-docker-compose exec pg_tileserv_db sh -c "shp2pgsql -D -s 4326 /work/SVI2018_FLORIDA_tract.shp | psql -U tileserv -d tileserv"
+/usr/local/bin/docker-compose exec pg_tileserv_db sh -c "shp2pgsql -D -s 4326 /work/SVI2018_FLORIDA_tract.shp | psql -U tileserv -d tileserv"
 
 # load TRI
 sed -i '1 s/\(.*\),$/\1/' data/Florida_TRI_2020.csv 
