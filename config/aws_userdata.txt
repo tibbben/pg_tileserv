@@ -49,9 +49,9 @@ git clone https://github.com/tibbben/pg_tileserv.git
 chown -R ec2-user:ec2-user pg_tileserv
 cd pg_tileserv/examples/docker
 sudo /usr/local/bin/docker-compose build
-sudo /usr/local/bin/docker-compose -d up
+sudo /usr/local/bin/docker-compose up -d
 
 sudo ./load-data.sh
 
 sudo /usr/local/bin/docker-compose down
-sudo /usr/local/bin/docker-compose -d up
+sudo /usr/local/bin/docker-compose up -d
