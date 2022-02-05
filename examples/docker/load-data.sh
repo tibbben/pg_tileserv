@@ -6,13 +6,15 @@
 /usr/local/bin/docker-compose exec pg_tileserv_db sh -c "cat work/DDL/*.sql | psql -v ON_ERROR_STOP=1 --username tileserv --dbname tileserv -tA -1"
 
 # first get data
-curl -X GET "https://opendata.vancouver.ca/explore/dataset/water-hydrants/download/?format=shp&timezone=America/Los_Angeles&lang=en&epsg=26910" > data/water-hydrants.zip
-unzip data/water-hydrants.zip -d data
-curl -X GET "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/ne_50m_admin_0_countries.zip" > data/ne_50m_admin_0_countries.zip
-unzip data/ne_50m_admin_0_countries.zip -d data
-curl -X GET "https://svi.cdc.gov/Documents/Data/2018_SVI_Data/States/Florida.zip" > data/Florida_SVI_2018.zip
-unzip data/Florida_SVI_2018.zip -d data
-curl -X GET "https://s3.amazonaws.com/dmap-cache-prod/soft/8cbe4cc7-654c-4514-be00-19f736267468.csv" > data/Florida_TRI_2020.csv
+cd data
+curl -X GET "https://opendata.vancouver.ca/explore/dataset/water-hydrants/download/?format=shp&timezone=America/Los_Angeles&lang=en&epsg=26910" > water-hydrants.zip
+unzip water-hydrants.zip
+wget "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/ne_50m_admin_0_countries.zip" -O ne_50m_admin_0_countries.zip
+unzip ne_50m_admin_0_countries.zip
+wget "https://svi.cdc.gov/Documents/Data/2018_SVI_Data/States/Florida.zip" -O Florida_SVI_2018.zip
+unzip Florida_SVI_2018.zip
+wget "https://s3.amazonaws.com/dmap-cache-prod/soft/8cbe4cc7-654c-4514-be00-19f736267468.csv" -O Florida_TRI_2020.csv
+cd ..
 
 # Load Admin 0 countries
 /usr/local/bin/docker-compose exec pg_tileserv_db sh -c "shp2pgsql -D -s 4326 /work/ne_50m_admin_0_countries.shp | psql -U tileserv -d tileserv"
