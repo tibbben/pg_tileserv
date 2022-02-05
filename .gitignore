@@ -6,3 +6,4 @@ public/
 config/pg_tileserv*.toml
 server.crt
 server.key
+.DS_Store
