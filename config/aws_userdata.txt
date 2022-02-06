@@ -21,6 +21,7 @@ Content-Disposition: attachment; filename="userdata.txt"
 yum update -y
 yum install git -y
 yum install gcc -y
+yum install jq -y
 
 HOME=/home/ec2-user
 cd $HOME

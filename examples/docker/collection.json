@@ -1,0 +1,195 @@
+{
+  "collection": [
+    { 
+      "id": "1",
+      "source": {
+        "url": "https://svi.cdc.gov/Documents/Data/2018_SVI_Data/States/Florida.zip",
+        "download": "wget",
+        "params": {
+          "-O": "Florida_SVI_2018.zip"
+        },
+        "filename": "Florida_SVI_2018.zip",
+        "layername": "florida_svi_2018",
+        "format": "zip",
+        "geometry": "MultiPolygon",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "shapefile.sh"
+      },
+      "dc": {
+        "title": "CDC/ATSDR Social Vulnerability Index 2018",
+        "creator": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
+        "url": "https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html",
+        "publisher": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
+        "rights": "public domain",
+        "coverage": "Florida",
+        "relation": "2018 Census Tracts",
+        "type": "dataset",
+        "date": "2020",
+        "abstract": "ATSDR’s Geospatial Research, Analysis & Services Program (GRASP) created Centers for Disease Control and Prevention Social Vulnerability Index (CDC SVI or simply SVI, hereafter) to help public health officials and emergency response planners identify and map the communities that will most likely need support before, during, and after a hazardous event.SVI indicates the relative vulnerability of every U.S. Census tract. Census tracts are subdivisions of counties for which the Census collects statistical data. SVI ranks the tracts on 15 social factors, including unemployment, minority status, and disability, and further groups them into four related themes. Thus, each tract receives a ranking for each Census variable and for each of the four themes, as well as an overall ranking. In addition to tract-level rankings, SVI 2010, 2014, 2016, and 2018 also have corresponding rankings at the county level. Notes below that describe “tract” methods also refer to county methods."
+      },
+      "style": {}
+    },
+    { 
+      "id": "2",
+      "source": {
+        "url": "https://s3.amazonaws.com/dmap-cache-prod/soft/8cbe4cc7-654c-4514-be00-19f736267468.csv",
+        "download": "wget",
+        "params": {
+          "-O": "Florida_TRI_2020.csv"
+        },
+        "filename": "Florida_TRI_2020.csv",
+        "layername": "florida_tri_2020",
+        "format": "csv",
+        "geometry": "Point",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "point_csv.sh"
+      },
+      "dc": {
+        "title": "Toxic Release Inventory 2020",
+        "creator": "United States Environmental Protection Agency",
+        "url": "https://www.epa.gov/toxics-release-inventory-tri-program/tri-data-and-tools",
+        "publisher": "United States Environmental Protection Agency",
+        "rights": "public domain",
+        "coverage": "Florida",
+        "relation": "",
+        "type": "dataset",
+        "date": "2021-10-21",
+        "abstract": "The Toxics Release Inventory (TRI) Program tracks the industrial management of toxic chemicals that may cause harm to human health and the environment. TRI data are reported by certain industrial and federal facilities. EPA makes these data available through multiple online tools, many of which add context to help make the reported data more understandable."
+      },
+      "style": {}
+    },
+    { 
+      "id": "3",
+      "source": {
+        "url": "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/ne_50m_admin_0_countries.zip",
+        "download": "wget",
+        "params": {
+          "-O": "ne_50m_admin_0_countries.zip"
+        },
+        "filename": "ne_50m_admin_0_countries.zip",
+        "layername": "ne_50m_admin_0_countries",
+        "format": "zip",
+        "geometry": "MultiPolygon",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "shapefile.sh"
+      },
+      "dc": {
+        "title": "www.naturalearthdata.com",
+        "creator": "Countries",
+        "url": "https://www.naturalearthdata.com",
+        "publisher": "Natural Earth Data",
+        "rights": "public domain",
+        "coverage": "Global",
+        "relation": "",
+        "type": "dataset",
+        "date": "2021",
+        "abstract": "Simple country outlines for the world."
+      },
+      "style": {}
+    },
+    { 
+      "id": "4",
+      "source": {
+        "url": "https://opendata.vancouver.ca/explore/dataset/water-hydrants/download/?format=shp&timezone=America/Los_Angeles&lang=en&epsg=26910",
+        "download": "curl -X GET",
+        "params": {
+          ">": "water-hydrants.zip"
+        },
+        "filename": "water-hydrants.zip",
+        "layername": "hydrants.zip",
+        "format": "zip",
+        "geometry": "Point",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "1 month",
+        "load": "shapefile.sh"
+      },
+      "dc": {
+        "title": "Water hydrants",
+        "creator": "City of Vancouver",
+        "url": "https://opendata.vancouver.ca/explore/dataset/water-hydrants/information/",
+        "publisher": "City of Vancouver",
+        "rights": "public domain",
+        "coverage": "Vancouver BC",
+        "relation": "",
+        "type": "dataset",
+        "date": "2022-01-31",
+        "abstract": "Location data for fire hydrants in Vancouver BC"
+      },
+      "style": {}
+    },
+    { 
+      "id": "5",
+      "source": {
+        "url": "https://na-georss.waze.com/rtserver/web/TGeoRSS",
+        "download": "curl -X GET -G",
+        "params": {
+          "tk": "ccp_partner",
+          "format:": "json",
+          "types": "traffic,alerts,irregularities",
+          "polygon": "-80.873124,25.760866;-80.872932,25.979434;-80.680038,25.978749;-80.680016,25.956857;-80.351384,25.956963;-80.294972,25.95677;-80.295187,25.97057;-80.278764,25.970968;-80.165724,25.973783;-80.123874,25.974484;-80.117798019680592,25.975152100031597;-80.111366842388989,25.700883883523296;-80.149265839783681,25.509609618567772;-80.234933618489734,25.347053471127754;-80.31036,25.3731;-80.407755,25.256811;-80.723335345852362,25.159074670963498;-80.857985411542899,25.1766094650017;-80.862191,25.364193;-80.87319,25.363993;-80.873124,25.760866"
+        },
+        "filename": "wazefeed.json",
+        "layername": ["waze_jams", "waze_alerts", "waze_irregularities"],
+        "format": "json",
+        "geometry": ["LineString", "Point", "LineString"],
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "2 minutes",
+        "load": "wazefeed.sh"
+      },
+      "dc": {
+        "title": "Waze Data Feed",
+        "creator": "Waze App",
+        "url": "https://www.waze.com/",
+        "publisher": "Waze/Google/Alphabet Inc",
+        "rights": "unclear",
+        "coverage": "Miami Dade County, FL, USA",
+        "relation": "",
+        "type": "rss feed",
+        "date": "now",
+        "abstract": "Live traffic data feed that includes traffic alerts, traffic jams, and traffic irregularities."
+      },
+      "style": {}
+    }
+,
+    { 
+      "id": "6",
+      "source": {
+        "url": "https://s3.amazonaws.com/na-st01.ext.exlibrisgroup.com/01UOML_INST/storage/alma/9B/31/E9/13/E9/5F/85/22/F0/BC/72/56/7F/0F/A4/14/hylo_2021.zip",
+        "download": "curl -X GET -G",
+        "params": {
+          "-d": "response-content-disposition=attachment%3B%20filename%3D%22hylo_2021.zip%22%3B%20filename%2A%3DUTF-8%27%27hylo_2021.zip",
+          "-d": "response-content-type=application%2Foctet-stream",
+          "-d": "X-Amz-Algorithm=AWS4-HMAC-SHA256",
+          "-d": "X-Amz-Date=",
+          "-d": "X-Amz-SignedHeaders=host",
+          "-d": "X-Amz-Expires=3600",
+          "-d": "X-Amz-Credential=AKIAJN6NPMNGJALPPWAQ%2F20220206%2Fus-east-1%2Fs3%2Faws4_request",
+          "-d": "X-Amz-Signature=X-Amz-Signature=ae28b5597e5ad0d7d932710d78830f67d3cb57d1fcc6bebf280c2ad323e484b7"
+        },
+        "filename": "hylo_2021.zip",
+        "layername": "hylo_2021/GeoTIFF_Rasters/Surface_Temperature_30m.tif",
+        "format": "zip",
+        "geometry": "raster",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "raster.sh"
+      },
+      "dc": {
+        "title": "Miami-Dade County FL Max Surface Temperature 2011-2020",
+        "creator": "Harrison, Tyler and Clement, Amy C and Maranto, Gina L. and Purkis, Sam and Lombard, Joanna L. and Clark-Hughes, Angela C. and Parrish, Abraham K and Reamer, Marcus B and Collins, Olivia and Lewis, Caroline and Cruz, Mayra and Solace, Anaruth",
+        "url": "https://doi.org/10.17604/p318-6n41",
+        "publisher": "University of Miami Libraries",
+        "rights": " Open Data Commons Attribution License: http://opendatacommons.org/licenses/by/1.0/",
+        "coverage": "Miami Dade County, FL, USA, 2011-2020",
+        "relation": "",
+        "type": "dataset",
+        "date": "2021",
+        "abstract": "Composite maximum temperatures in Miami-Dade County FL derived from Max Landsat 8 ARD (Analysis Ready Data) Surface Temperature from 7 different images ranging from 2011-2020.  Images: LE07_CU_027019_20170830_20181130_C01_V01_ST, LE07_CU_027019_20170814_20181130_C01_V01_ST, LE07_CU_027019_20120731_20190507_C01_V01_ST, LE07_CU_027019_20110915_20181212_C01_V01_ST, LE07_CU_027019_20110713_20181213_C01_V01_ST, LC08_CU_027019_20200814_20200825_C01_V01_ST, and LC08_CU_027019_20160904_20190430_C01_V01_ST."
+      },
+      "style": {}
+    }
+  ]
+}
