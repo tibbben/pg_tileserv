@@ -5,13 +5,11 @@
       "source": {
         "url": "https://svi.cdc.gov/Documents/Data/2018_SVI_Data/States/Florida.zip",
         "download": "wget",
-        "params": {
-          "-O": "Florida_SVI_2018.zip"
-        },
-        "filename": "Florida_SVI_2018.zip",
+        "filename": "SVI2018_FLORIDA_tract.zip",
         "layername": "florida_svi_2018",
         "format": "zip",
         "geometry": "MultiPolygon",
+        "epsg": "4326",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
         "load": "shapefile.sh"
@@ -35,13 +33,15 @@
       "source": {
         "url": "https://s3.amazonaws.com/dmap-cache-prod/soft/8cbe4cc7-654c-4514-be00-19f736267468.csv",
         "download": "wget",
-        "params": {
-          "-O": "Florida_TRI_2020.csv"
-        },
         "filename": "Florida_TRI_2020.csv",
         "layername": "florida_tri_2020",
         "format": "csv",
+        "geometry_columns": {
+          "latitude": "12. LATITUDE",
+          "longitude": "13. LONGITUDE"
+        },
         "geometry": "Point",
+        "epsg": "4326",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
         "load": "point_csv.sh"
@@ -65,20 +65,18 @@
       "source": {
         "url": "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/ne_50m_admin_0_countries.zip",
         "download": "wget",
-        "params": {
-          "-O": "ne_50m_admin_0_countries.zip"
-        },
         "filename": "ne_50m_admin_0_countries.zip",
         "layername": "ne_50m_admin_0_countries",
         "format": "zip",
         "geometry": "MultiPolygon",
+        "epsg": "4326",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
         "load": "shapefile.sh"
       },
       "dc": {
-        "title": "www.naturalearthdata.com",
-        "creator": "Countries",
+        "title": "Country Boundaries",
+        "creator": "Natural Earth Data",
         "url": "https://www.naturalearthdata.com",
         "publisher": "Natural Earth Data",
         "rights": "public domain",
@@ -95,13 +93,11 @@
       "source": {
         "url": "https://opendata.vancouver.ca/explore/dataset/water-hydrants/download/?format=shp&timezone=America/Los_Angeles&lang=en&epsg=26910",
         "download": "curl -X GET",
-        "params": {
-          ">": "water-hydrants.zip"
-        },
         "filename": "water-hydrants.zip",
-        "layername": "hydrants.zip",
+        "layername": "hydrants",
         "format": "zip",
         "geometry": "Point",
+        "epsg": "26910",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "1 month",
         "load": "shapefile.sh"
@@ -123,18 +119,13 @@
     { 
       "id": "5",
       "source": {
-        "url": "https://na-georss.waze.com/rtserver/web/TGeoRSS",
-        "download": "curl -X GET -G",
-        "params": {
-          "tk": "ccp_partner",
-          "format:": "json",
-          "types": "traffic,alerts,irregularities",
-          "polygon": "-80.873124,25.760866;-80.872932,25.979434;-80.680038,25.978749;-80.680016,25.956857;-80.351384,25.956963;-80.294972,25.95677;-80.295187,25.97057;-80.278764,25.970968;-80.165724,25.973783;-80.123874,25.974484;-80.117798019680592,25.975152100031597;-80.111366842388989,25.700883883523296;-80.149265839783681,25.509609618567772;-80.234933618489734,25.347053471127754;-80.31036,25.3731;-80.407755,25.256811;-80.723335345852362,25.159074670963498;-80.857985411542899,25.1766094650017;-80.862191,25.364193;-80.87319,25.363993;-80.873124,25.760866"
-        },
+        "url": "https://na-georss.waze.com/rtserver/web/TGeoRSS?tk=ccp_partner&format=JSON&types=traffic%2Calerts%2Cirregularities&polygon=-80.214000%2C25.810000%3B-80.359000%2C25.807000%3B-80.486000%2C25.805000%3B-80.481000%2C25.568000%3B-80.294000%2C25.566000%3B-80.272000%2C25.625000%3B-80.235000%2C25.715000%3B-80.184000%2C25.761000%3B-80.186000%2C25.811000%3B-80.214000%2C25.810000%3B-80.214000%2C25.810000",
+        "download": "curl -X GET",
         "filename": "wazefeed.json",
         "layername": ["waze_jams", "waze_alerts", "waze_irregularities"],
         "format": "json",
         "geometry": ["LineString", "Point", "LineString"],
+        "epsg": "4326",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "2 minutes",
         "load": "wazefeed.sh"
@@ -157,22 +148,13 @@
     { 
       "id": "6",
       "source": {
-        "url": "https://s3.amazonaws.com/na-st01.ext.exlibrisgroup.com/01UOML_INST/storage/alma/9B/31/E9/13/E9/5F/85/22/F0/BC/72/56/7F/0F/A4/14/hylo_2021.zip",
-        "download": "curl -X GET -G",
-        "params": {
-          "-d": "response-content-disposition=attachment%3B%20filename%3D%22hylo_2021.zip%22%3B%20filename%2A%3DUTF-8%27%27hylo_2021.zip",
-          "-d": "response-content-type=application%2Foctet-stream",
-          "-d": "X-Amz-Algorithm=AWS4-HMAC-SHA256",
-          "-d": "X-Amz-Date=",
-          "-d": "X-Amz-SignedHeaders=host",
-          "-d": "X-Amz-Expires=3600",
-          "-d": "X-Amz-Credential=AKIAJN6NPMNGJALPPWAQ%2F20220206%2Fus-east-1%2Fs3%2Faws4_request",
-          "-d": "X-Amz-Signature=X-Amz-Signature=ae28b5597e5ad0d7d932710d78830f67d3cb57d1fcc6bebf280c2ad323e484b7"
-        },
-        "filename": "hylo_2021.zip",
-        "layername": "hylo_2021/GeoTIFF_Rasters/Surface_Temperature_30m.tif",
+        "url": "https://tiles.gdsc.miami.edu/raster/Surface_Temperature_30m.zip",
+        "download": "wget",
+        "filename": "Surface_Temperature_30m.zip",
+        "layername": "Surface_Temperature_30m",
         "format": "zip",
         "geometry": "raster",
+        "epsg": "3857",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
         "load": "raster.sh"
