@@ -2,10 +2,7 @@
 # NB the docker-compose stack must be running !
 #
 
-#set up schema
-/usr/local/bin/docker-compose exec -T pg_tileserv_db sh -c "cat work/DDL/*.sql | psql -v ON_ERROR_STOP=1 --username tileserv --dbname tileserv -tA -1"
-
-# first get data
+# first get data, this is a bit of a hack, it delays any DDL enough to have everything running before writing to the db
 cd data
 curl -X GET "https://opendata.vancouver.ca/explore/dataset/water-hydrants/download/?format=shp&timezone=America/Los_Angeles&lang=en&epsg=26910" > water-hydrants.zip
 unzip water-hydrants.zip
@@ -15,6 +12,12 @@ wget "https://svi.cdc.gov/Documents/Data/2018_SVI_Data/States/Florida.zip" -O Fl
 unzip Florida_SVI_2018.zip
 wget "https://s3.amazonaws.com/dmap-cache-prod/soft/8cbe4cc7-654c-4514-be00-19f736267468.csv" -O Florida_TRI_2020.csv
 cd ..
+
+# make sure database is ready
+sleep 10
+
+#set up schema
+/usr/local/bin/docker-compose exec -T pg_tileserv_db sh -c "cat work/DDL/*.sql | psql -v ON_ERROR_STOP=1 --username tileserv --dbname tileserv -tA -1"
 
 # Load Admin 0 countries
 /usr/local/bin/docker-compose exec -T pg_tileserv_db sh -c "shp2pgsql -D -s 4326 /work/ne_50m_admin_0_countries.shp | psql -U tileserv -d tileserv"
