@@ -6,3 +6,13 @@
 *.shp
 *.shx
 *.txt
+*.tif
+*.xml
+*.sbn
+*.sbx
+*.tfw
+*.ovr
+*.csv
+*.sql
+*.json
+
