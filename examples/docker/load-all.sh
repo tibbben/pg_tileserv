@@ -1,4 +1,4 @@
-DATADIR=data
+DATA_DIR=data
 readarray -t collection < <(jq -c '.collection[]' collection.json)
 for item in "${collection[@]}"
 do
@@ -8,15 +8,33 @@ do
 
         command+=($url)
         filename=$(jq -r '.filename' <<< $source)
-        save='> '$DATADIR/$filename
+        save='> '$DATA_DIR/$filename
         if [ $command == "wget" ]
         then
-                save=-'O '$DATADIR/$filename
+                save=-'O '$DATA_DIR/$filename
         fi
         command+=($save)
         echo "${command[@]}"
+        eval "${command[@]}"
         if [ $(jq -r '.format' <<< $source) == "zip" ]
         then
-                echo unzip $DATADIR/$(jq -r '.filename' <<< $source) -d $DATADIR
+                unzip $DATA_DIR/$(jq -r '.filename' <<< $source) -d $DATA_DIR
+                rm $DATA_DIR/$filename
         fi
+done
+
+DC_DIR=/usr/local/bin
+ETL_DIR=$DATA_DIR/ETL
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/pg.env"
+
+for item in "${collection[@]}"
+do
+        source=$(jq '.source' <<< $item)
+        filename=$(jq -r '.filename' <<< $source)
+        layername=$(jq -r '.layername' <<< $source)
+        load=$(jq -r '.load' <<< $source)
+        echo $DIR/$ETL_DIR/$load
+        . "$DIR/$ETL_DIR/$load"
 done
