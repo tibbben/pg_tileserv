@@ -144,8 +144,7 @@
         "abstract": "Live traffic data feed that includes traffic alerts, traffic jams, and traffic irregularities."
       },
       "style": {}
-    }
-,
+    },
     { 
       "id": "6",
       "source": {
@@ -165,12 +164,40 @@
         "creator": "Harrison, Tyler and Clement, Amy C and Maranto, Gina L. and Purkis, Sam and Lombard, Joanna L. and Clark-Hughes, Angela C. and Parrish, Abraham K and Reamer, Marcus B and Collins, Olivia and Lewis, Caroline and Cruz, Mayra and Solace, Anaruth",
         "url": "https://doi.org/10.17604/p318-6n41",
         "publisher": "University of Miami Libraries",
-        "rights": " Open Data Commons Attribution License: http://opendatacommons.org/licenses/by/1.0/",
+        "rights": "Open Data Commons Attribution License: http://opendatacommons.org/licenses/by/1.0/",
         "coverage": "Miami Dade County, FL, USA, 2011-2020",
         "relation": "",
         "type": "dataset",
         "date": "2021",
         "abstract": "Composite maximum temperatures in Miami-Dade County FL derived from Max Landsat 8 ARD (Analysis Ready Data) Surface Temperature from 7 different images ranging from 2011-2020.  Images: LE07_CU_027019_20170830_20181130_C01_V01_ST, LE07_CU_027019_20170814_20181130_C01_V01_ST, LE07_CU_027019_20120731_20190507_C01_V01_ST, LE07_CU_027019_20110915_20181212_C01_V01_ST, LE07_CU_027019_20110713_20181213_C01_V01_ST, LC08_CU_027019_20200814_20200825_C01_V01_ST, and LC08_CU_027019_20160904_20190430_C01_V01_ST."
+      },
+      "style": {}
+    },
+    { 
+      "id": "7",
+      "source": {
+        "url": "https://www2.census.gov/geo/tiger/TIGER2021/TRACT/tl_2021_12_tract.zip",
+        "download": "wget",
+        "filename": "tl_2021_12_tract.zip",
+        "layername": "florida_2021_12_tract",
+        "format": "zip",
+        "geometry": "shp",
+        "epsg": "4269",
+        "lastUpdate": "2021-09-22",
+        "updateFrequency": "static",
+        "load": "shapefile.sh"
+      },
+      "dc": {
+        "title": "2021 Tiger Census Tracts - Florida (12)",
+        "creator": "United States Census Bureau, Geography Division",
+        "url": "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
+        "publisher": "United States Census Bureau, Geography Division",
+        "rights": "public domain",
+        "coverage": "Miami Dade County, FL, USA, 2021",
+        "relation": "",
+        "type": "dataset",
+        "date": "2021",
+        "abstract": "Census tracts for 2021."
       },
       "style": {}
     }
