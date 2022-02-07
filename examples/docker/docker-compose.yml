@@ -16,7 +16,7 @@ services:
     container_name: pg_tileserv
 
     volumes:
-      - ./data:/work
+      - ./data:/data
 
     env_file:
       - pg_tileserv.env
@@ -47,7 +47,10 @@ services:
     command: tail -F /dev/null
 
     volumes:
-      - ./data:/work
+      - ./data:/data
+
+    depends_on:
+      - pg_tileserv_db
 
 volumes:
   pg_tileserv_db:
