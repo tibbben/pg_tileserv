@@ -53,7 +53,7 @@ services:
       - pg_tileserv_db
 
   pg_static_tileserv:
-    iamge: lipanski/docker-static-website:latest
+    image: lipanski/docker-static-website:latest
 
     container_name: pg_static_tileserv
 

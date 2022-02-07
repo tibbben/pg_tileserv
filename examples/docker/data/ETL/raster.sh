@@ -13,8 +13,7 @@ fi
 
 if [[ " $(jq 'keys' <<<$style) " =~ "tiles" ]]
 then
-  [ ! -d "$DATA_DIR/tiles" ] && mkdir $DATA_DIR/tiles
-  mkdir $DATA_DIR/tiles/$layername
+  mkdir $DATA_DIR/html/$layername
   zoom=$(jq '.tiles.zoom' <<<$style)
   $DC_DIR/docker-compose exec -T pg_gdal sh -c "gdal2tiles.py -z $zoom --xyz $DATA_DIR/$torender $DATA_DIR/tiles/$layername"
 fi
