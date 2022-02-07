@@ -39,7 +39,7 @@ for layer,tostring in layers.items():
                 "type": "Feature",
                 "geometry": {
                     "type": geom,
-                    "ccordinates": coords
+                    "coordinates": coords
                 },
                 "properties": properties
             }
