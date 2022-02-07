@@ -95,7 +95,7 @@
         "url": "https://opendata.vancouver.ca/explore/dataset/water-hydrants/download/?format=shp&timezone=America/Los_Angeles&lang=en&epsg=26910",
         "download": "curl -X GET",
         "filename": "water-hydrants.zip",
-        "layername": "water-hydrants",
+        "layername": "hydrants",
         "format": "zip",
         "geometry": "Point",
         "epsg": "26910",
@@ -172,12 +172,12 @@
         "abstract": "Composite maximum temperatures in Miami-Dade County FL derived from Max Landsat 8 ARD (Analysis Ready Data) Surface Temperature from 7 different images ranging from 2011-2020.  Images: LE07_CU_027019_20170830_20181130_C01_V01_ST, LE07_CU_027019_20170814_20181130_C01_V01_ST, LE07_CU_027019_20120731_20190507_C01_V01_ST, LE07_CU_027019_20110915_20181212_C01_V01_ST, LE07_CU_027019_20110713_20181213_C01_V01_ST, LC08_CU_027019_20200814_20200825_C01_V01_ST, and LC08_CU_027019_20160904_20190430_C01_V01_ST."
       },
       "style": {
-        "monoband-psuedo-color": {
-          "color-ramp": "0 white 0\n75 yellow\n160 red\n255 white 0",
+        "monobandpsuedocolor": {
+          "colorramp": "0 white 0\n75 yellow\n160 red\n255 white 0",
           "render": "gdaldem color-relief -alpha"
         },
         "tiles": {
-          "zoom": "6-18"
+          "zoom": "6-14"
         },
         "transparency": 0.5
       }
@@ -214,7 +214,7 @@
       "id": "8",
       "source": {
         "src": "../openlayers/openlayers-function-click.sql",
-        "filename": "openlayers-function-click.sq",
+        "filename": "openlayers-function-click.sql",
         "layername": "hydrants_voronoi",
         "format": "sql",
         "dependancies": [4],
