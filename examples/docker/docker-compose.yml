@@ -15,6 +15,9 @@ services:
 
     container_name: pg_tileserv
 
+    volumes:
+      - ./data:/work
+
     env_file:
       - pg_tileserv.env
 
@@ -35,6 +38,16 @@ services:
 
     env_file:
       - pg.env
+
+  pg_gdal:
+    image: osgeo/gdal:alpine-normal-latest-amd64
+
+    container_name: pg_gdal
+
+    command: tail -F /dev/null
+
+    volumes:
+      - ./data:/work
 
 volumes:
   pg_tileserv_db:
