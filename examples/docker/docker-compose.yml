@@ -58,7 +58,7 @@ services:
     container_name: pg_static_tileserv
 
     volumes:
-      - .data/tiles:/home/static
+      - .data/html:/home/static
 
 volumes:
   pg_tileserv_db:
