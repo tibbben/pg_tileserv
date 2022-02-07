@@ -21,7 +21,7 @@
         "publisher": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
         "rights": "public domain",
         "coverage": "Florida",
-        "relation": "2018 Census Tracts",
+        "relations": [7],
         "type": "dataset",
         "date": "2020",
         "abstract": "ATSDR’s Geospatial Research, Analysis & Services Program (GRASP) created Centers for Disease Control and Prevention Social Vulnerability Index (CDC SVI or simply SVI, hereafter) to help public health officials and emergency response planners identify and map the communities that will most likely need support before, during, and after a hazardous event.SVI indicates the relative vulnerability of every U.S. Census tract. Census tracts are subdivisions of counties for which the Census collects statistical data. SVI ranks the tracts on 15 social factors, including unemployment, minority status, and disability, and further groups them into four related themes. Thus, each tract receives a ranking for each Census variable and for each of the four themes, as well as an overall ranking. In addition to tract-level rankings, SVI 2010, 2014, 2016, and 2018 also have corresponding rankings at the county level. Notes below that describe “tract” methods also refer to county methods."
@@ -54,7 +54,7 @@
         "publisher": "United States Environmental Protection Agency",
         "rights": "public domain",
         "coverage": "Florida",
-        "relation": "",
+        "relations": [],
         "type": "dataset",
         "date": "2021-10-21",
         "abstract": "The Toxics Release Inventory (TRI) Program tracks the industrial management of toxic chemicals that may cause harm to human health and the environment. TRI data are reported by certain industrial and federal facilities. EPA makes these data available through multiple online tools, many of which add context to help make the reported data more understandable."
@@ -82,7 +82,7 @@
         "publisher": "Natural Earth Data",
         "rights": "public domain",
         "coverage": "Global",
-        "relation": "",
+        "relations": [],
         "type": "dataset",
         "date": "2021",
         "abstract": "Simple country outlines for the world."
@@ -110,7 +110,7 @@
         "publisher": "City of Vancouver",
         "rights": "public domain",
         "coverage": "Vancouver BC",
-        "relation": "",
+        "relations": [],
         "type": "dataset",
         "date": "2022-01-31",
         "abstract": "Location data for fire hydrants in Vancouver BC"
@@ -138,7 +138,7 @@
         "publisher": "Waze/Google/Alphabet Inc",
         "rights": "unclear",
         "coverage": "Miami Dade County, FL, USA",
-        "relation": "",
+        "relations": [],
         "type": "rss feed",
         "date": "now",
         "abstract": "Live traffic data feed that includes traffic alerts, traffic jams, and traffic irregularities."
@@ -166,12 +166,21 @@
         "publisher": "University of Miami Libraries",
         "rights": "Open Data Commons Attribution License: http://opendatacommons.org/licenses/by/1.0/",
         "coverage": "Miami Dade County, FL, USA, 2011-2020",
-        "relation": "",
+        "relations": [],
         "type": "dataset",
         "date": "2021",
         "abstract": "Composite maximum temperatures in Miami-Dade County FL derived from Max Landsat 8 ARD (Analysis Ready Data) Surface Temperature from 7 different images ranging from 2011-2020.  Images: LE07_CU_027019_20170830_20181130_C01_V01_ST, LE07_CU_027019_20170814_20181130_C01_V01_ST, LE07_CU_027019_20120731_20190507_C01_V01_ST, LE07_CU_027019_20110915_20181212_C01_V01_ST, LE07_CU_027019_20110713_20181213_C01_V01_ST, LC08_CU_027019_20200814_20200825_C01_V01_ST, and LC08_CU_027019_20160904_20190430_C01_V01_ST."
       },
-      "style": {}
+      "style": {
+        "monoband-psuedo-color": {
+          "color-ramp": "0 white 0\n75 yellow\n160 red\n255 white 0",
+          "render": "gdaldem color-relief -alpha"
+        },
+        "tiles": {
+          "zoom": "6-18"
+        },
+        "transparency": 0.5
+      }
     },
     { 
       "id": "7",
@@ -194,10 +203,36 @@
         "publisher": "United States Census Bureau, Geography Division",
         "rights": "public domain",
         "coverage": "Miami Dade County, FL, USA, 2021",
-        "relation": "",
+        "relations": [],
         "type": "dataset",
         "date": "2021",
         "abstract": "Census tracts for 2021."
+      },
+      "style": {}
+    },
+    { 
+      "id": "8",
+      "source": {
+        "src": "../openlayers/openlayers-function-click.sql",
+        "filename": "openlayers-function-click.sq",
+        "layername": "hydrants_voronoi",
+        "format": "sql",
+        "dependancies": [4],
+        "lastUpdate": "2020-03-09",
+        "updateFrequency": "static",
+        "load": "sqlfunction.sh"
+      },
+      "dc": {
+        "title": "Voronoi Tile Generator for Point Data",
+        "creator": "Paul Ramsey et al (23 more)",
+        "url": "https://github.com/CrunchyData/pg_tileserv",
+        "publisher": "CrunchyData (",
+        "rights": "Apache License Version 2.0, January 2004 http://www.apache.org/licenses/",
+        "coverage": "Vancouver BC, Canada",
+        "relations": [4],
+        "type": "function",
+        "date": "2020",
+        "abstract": "Given a tile address, click coordinates, and a feature count, generate a Voronoi diagram around the N nearest fire hydrants to the click point."
       },
       "style": {}
     }

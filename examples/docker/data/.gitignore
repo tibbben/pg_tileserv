@@ -15,5 +15,6 @@
 *.csv
 *.sql
 *.json
+tiles/
 
 !collection.json

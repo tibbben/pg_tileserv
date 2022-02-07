@@ -1,5 +1,6 @@
 long=$(jq -r '.geometry_columns.longitude' <<< $source)
 lat=$(jq -r '.geometry_columns.latitude' <<< $source)
+epsg=$(jq -r '.epsg' <<< $source)
 # use sqlite3 as a tool for csv ETL 
 sed -i '1 s/\(.*\),$/\1/' $DATA_DIR/$filename 
 cat <<SQL | /usr/local/bin/sqlite3
