@@ -16,3 +16,4 @@
 *.sql
 *.json
 
+!collection.json
