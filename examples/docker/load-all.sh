@@ -34,6 +34,7 @@ do
         source=$(jq '.source' <<< $item)
         filename=$(jq -r '.filename' <<< $source)
         layername=$(jq -r '.layername' <<< $source)
+        epsg=$(jq -r '.epsg' <<< $source)
         load=$(jq -r '.load' <<< $source)
         echo $DIR/$ETL_DIR/$load
         . "$DIR/$ETL_DIR/$load"

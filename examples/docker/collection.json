@@ -94,7 +94,7 @@
         "url": "https://opendata.vancouver.ca/explore/dataset/water-hydrants/download/?format=shp&timezone=America/Los_Angeles&lang=en&epsg=26910",
         "download": "curl -X GET",
         "filename": "water-hydrants.zip",
-        "layername": "hydrants",
+        "layername": "water-hydrants",
         "format": "zip",
         "geometry": "Point",
         "epsg": "26910",
@@ -120,7 +120,7 @@
       "id": "5",
       "source": {
         "url": "https://na-georss.waze.com/rtserver/web/TGeoRSS?tk=ccp_partner&format=JSON&types=traffic%2Calerts%2Cirregularities&polygon=-80.214000%2C25.810000%3B-80.359000%2C25.807000%3B-80.486000%2C25.805000%3B-80.481000%2C25.568000%3B-80.294000%2C25.566000%3B-80.272000%2C25.625000%3B-80.235000%2C25.715000%3B-80.184000%2C25.761000%3B-80.186000%2C25.811000%3B-80.214000%2C25.810000%3B-80.214000%2C25.810000",
-        "download": "curl -X GET",
+        "download": "curl",
         "filename": "wazefeed.json",
         "layername": ["waze_jams", "waze_alerts", "waze_irregularities"],
         "format": "json",
