@@ -58,7 +58,10 @@ services:
     container_name: pg_static_tileserv
 
     volumes:
-      - .data/html:/home/static
+      - ./data/html:/home/static
+
+    ports:
+      - 3000:3000
 
 volumes:
   pg_tileserv_db:
