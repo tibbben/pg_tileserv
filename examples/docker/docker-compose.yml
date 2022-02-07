@@ -52,5 +52,13 @@ services:
     depends_on:
       - pg_tileserv_db
 
+  pg_static_tileserv:
+    iamge: lipanski/docker-static-website:latest
+
+    container_name: pg_static_tileserv
+
+    volumes:
+      - .data/tiles:/home/static
+
 volumes:
   pg_tileserv_db:
