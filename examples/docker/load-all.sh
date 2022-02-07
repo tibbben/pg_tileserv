@@ -1,5 +1,7 @@
 DATA_DIR=data
-readarray -t collection < <(jq -c '.collection[]' collection.json)
+readarray -t collection < <(jq -c '.collection[]' $DATA_DIR/collection.json)
+
+# first download all data
 for item in "${collection[@]}"
 do
         source=$(jq '.source' <<< $item)
@@ -29,6 +31,7 @@ DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . "$DIR/pg.env"
 
+# second perform ETL
 for item in "${collection[@]}"
 do
         source=$(jq '.source' <<< $item)
