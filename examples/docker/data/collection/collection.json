@@ -31,7 +31,8 @@
     { 
       "id": "2",
       "source": {
-        "url": "https://s3.amazonaws.com/dmap-cache-prod/soft/8cbe4cc7-654c-4514-be00-19f736267468.csv",
+        "_url": "https://s3.amazonaws.com/dmap-cache-prod/soft/8cbe4cc7-654c-4514-be00-19f736267468.csv",
+	"url": "https://s3.amazonaws.com/dmap-cache-prod/soft/ba9e86bd-6d57-4163-8cad-fd7e4ae270e0.csv",
         "download": "wget",
         "filename": "Florida_TRI_2020.csv",
         "layername": "florida_tri_2020",

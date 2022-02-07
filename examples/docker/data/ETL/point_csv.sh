@@ -13,3 +13,4 @@ sudo $DC_DIR/docker-compose exec -T pg_tileserv_db sh -c "cat /work/$layername.s
 sudo $DC_DIR/docker-compose exec -T pg_tileserv_db sh -c "psql -U $POSTGRES_USER -d $POSTGRES_DB -c \"SELECT AddGeometryColumn ('public','$layername','geom',$epsg,'POINT',2);\""
 # the where clause in the following command is a hack for missing data that was messing with the ETL
 sudo $DC_DIR/docker-compose exec -T pg_tileserv_db sh -c "psql -U $POSTGRES_USER -d $POSTGRES_DB -c \"UPDATE $layername SET geom=ST_SetSRID(ST_MakePoint(\\\"$long\\\"::double precision,\\\"$lat\\\"::double precision),$epsg) WHERE \\\"$long\\\" != 'NAD83';\""
+rm $DATA_DIR/$filename $DATA_DIR/$layername.sql
