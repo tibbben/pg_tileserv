@@ -174,7 +174,7 @@
       "style": {
         "monobandpsuedocolor": {
           "colorramp": "0 white 0\n75 yellow\n160 red\n255 white 0",
-          "render": "gdaldem color-relief -alpha"
+          "flags": "-alpha"
         },
         "tiles": {
           "zoom": "6-14"
