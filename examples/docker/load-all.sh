@@ -1,5 +1,5 @@
 DATA_DIR=data
-readarray -t collection < <(jq -c '.collection[]' $DATA_DIR/collection/collection.json)
+readarray -t collection < <(jq -c '.collection[]' $DATA_DIR/html/collection/collection.json)
 
 # first download all data
 for item in "${collection[@]}"

@@ -21,4 +21,4 @@ then
   sudo echo "*.png" > $DATA_DIR/html/$layername/.gitignore
 fi
 
-rm $DATA_DIR/${torender::-4}.*
+sudo rm $DATA_DIR/${torender::-4}.*
