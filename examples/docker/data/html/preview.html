@@ -27,24 +27,28 @@
     var map;
     var mapcolor = "blue";
 
-    var host = "http://52.90.186.160:7800/";
-        // host = "http://localhost:7800/";
+    var vector_host = "http://52.90.186.160:7800/";
+        vector_host = "http://localhost:7800/";
+
+    var raster_host = "http://52.90.186.160:3000/";
+        raster_host = "http://localhost:3000/";
 
     var currentlayer = '';
     var renderedlayers = {};
 
+    var toggleRendered = function(layer,vis) {
+      renderedlayers[layer]['layers'].forEach(id => {
+        map.setLayoutProperty(id, 'visibility', vis);
+      });
+    }
+
     var $select = $('<select></select>')
         .appendTo($('#variables'))
         .on('change', function() {
-          renderedlayers[currentlayer]['layers'].forEach(id => {
-            map.setLayoutProperty(id, 'visibility', 'none');
-          });
+          toggleRendered(currentlayer,'none');
           currentlayer = $(this).val();
-          renderedlayers[currentlayer]['layers'].forEach(id => {
-            map.setLayoutProperty(id, 'visibility', 'visible');
-          });
+          toggleRendered(currentlayer,'visible');
           map.fitBounds(renderedlayers[currentlayer]['bounds']);
-          //setVariable($(this).val());
         });
 
     $.getJSON("collection/collection.json", function(collection) {
@@ -113,7 +117,8 @@
           "fill-color": mapcolor,
           "fill-outline-color": mapcolor,
           "fill-opacity": 0.1
-        }
+        },
+        "raster": {}
       };
 
       var painttypes = {
@@ -123,11 +128,12 @@
         "MultiLineString":"line",
         "Polygon":"fill",
         "MultiPolygon":"fill",
+        "Raster": "raster"
       };
 
-      function layerSource(tileurl) {
+      function layerSource(tileurl, tiletype) {
         return {
-          "type": "vector",
+          "type": tiletype,
           "tiles": [tileurl],
           "minzoom": layer["minzoom"],
           "maxzoom": layer["maxzoom"]
@@ -138,7 +144,7 @@
         return id+"."+gtype+"."+paint;
       }
 
-      function layerConfig(id, gtype, paint) {
+      function layerConfig(id, gtype, paint) { 
         return {
           "id": layerId(id, gtype, paint),
           "source": id,
@@ -192,9 +198,10 @@
       }
 
       function addLayers(id, gtype, url, rendered) {
-        map.addSource(id, layerSource(url));
+        let tiletype = (gtype === 'Raster') ? "raster" : "vector";
+        map.addSource(id, layerSource(url, tiletype));
         var gtypebasic = gtype.replace("Multi", "");
-        var gtypes = ["Point", "LineString", "Polygon"];
+        var gtypes = ["Point", "LineString", "Polygon", "Raster"];
         // add just one renderer for known types
         if (gtypes.includes(gtypebasic)) {
           addOneLayer(id, gtypebasic, rendered);
@@ -213,29 +220,50 @@
       map.addControl(new mapboxgl.NavigationControl());
       map.on("load", function() {
         collection.collection.forEach(set => {
-          if (typeof set.source.layername === 'string' || set.source.layername instanceof String) {
-            layers = [set.source.layername]; } else { layers = set.source.layername; }
-          if (set.style.tiles.type === "vector" ) {
-            layers.forEach(dataset => {
-              $.getJSON(host+"public."+dataset+".json", function(l) {
-                layer = l;
-                renderedlayers[layer["id"]] = {
-                  layers: [],
-                  bounds: layer['bounds']
-                };
-                addLayers(layer["id"], layer["geometrytype"], layer["tileurl"], renderedlayers[layer["id"]]['layers']);
-                if (currentlayer === '') {
-                  currentlayer=layer["id"]; 
-                  map.fitBounds(layer['bounds']);
-                } else {
-                  renderedlayers[layer["id"]]['layers'].forEach(id => {
-                    map.setLayoutProperty(id, 'visibility', 'none');
-                  });
-                }
-                $('<option></option>').text(dataset).attr('value', layer["id"]).appendTo($select);
-              });
-            });
+
+          var setlayer = function(dataset) {
+            renderedlayers[layer["id"]] = {
+              layers: [],
+              bounds: layer['bounds']
+            };
+            addLayers(layer["id"], layer["geometrytype"], layer["tileurl"], renderedlayers[layer["id"]]['layers']);
+            if (currentlayer === '') {
+              currentlayer=layer["id"]; 
+              map.fitBounds(layer['bounds']);
+            } else {
+              toggleRendered(layer["id"],'none')
+            }
+            $('<option></option>').text(dataset).attr('value', layer["id"]).appendTo($select);
           }
+
+          if (typeof set.source.layername === 'string' || set.source.layername instanceof String)
+            layers = [set.source.layername];
+          else 
+            layers = set.source.layername;
+
+          layers.forEach(dataset => {
+            switch(set.style.tiles.type) {
+              case "vector":
+                $.getJSON(vector_host+"public."+dataset+".json", function(l) {
+                  layer = l;
+                  setlayer(dataset);
+                });
+                break;
+              case "raster":
+                layer =  {
+                  "id": set.source.layername,
+                  "bounds": set.source.bounds,
+                  "minzoom": parseInt(set.style.tiles.zoom.split('-')[0]),
+                  "maxzoom": parseInt(set.style.tiles.zoom.split('-')[1]),
+                  "geometrytype": "Raster",
+                  "tileurl": raster_host+set.source.layername+'/{z}/{x}/{y}.png',
+                  "properties": set.style.properties
+                }
+                setlayer(dataset);
+                break;
+            }
+          });
+
         });
       });
 
