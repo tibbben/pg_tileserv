@@ -1,8 +1,10 @@
+#!/usr/bin/env bash
+
 DATA_DIR=data
-readarray -t collection < <(jq -c '.collection[]' $DATA_DIR/html/collection/collection.json)
+echo "$(jq -c '.collection[]' $DATA_DIR/html/collection/collection.json)" > temp.txt
 
 # first download all data
-for item in "${collection[@]}"
+while read item
 do
         source=$(jq '.source' <<< $item)
         if [[ " $(jq 'keys' <<<$source) " =~ "download" ]];
@@ -26,7 +28,7 @@ do
                         rm $DATA_DIR/$filename
                 fi
         fi
-done
+done < temp.txt
 
 DC_DIR=/usr/local/bin
 ETL_DIR=$DATA_DIR/ETL
@@ -35,7 +37,7 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . "$DIR/pg.env"
 
 # second perform ETL
-for item in "${collection[@]}"
+while read item
 do
         source=$(jq '.source' <<< $item)
         filename=$(jq -r '.filename' <<< $source)
@@ -43,4 +45,6 @@ do
         load=$(jq -r '.load' <<< $source)
         echo $DIR/$ETL_DIR/$load
         . "$DIR/$ETL_DIR/$load"
-done
+done < temp.txt
+
+rm temp.txt

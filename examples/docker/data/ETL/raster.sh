@@ -1,5 +1,7 @@
+#!/usr/bin/env bash
+
 style=$(jq -r '.style' <<< $item)
-filename=${filename::-4}.tif
+filename=${filename%.*}.tif
 torender=$filename
 
 if [[ " $(jq 'keys' <<<$style) " =~ "monobandpsuedocolor" ]]
@@ -7,7 +9,7 @@ then
   colorramp=$(jq -r '.monobandpsuedocolor.colorramp' <<<$style)
   echo -e "$colorramp" > $DATA_DIR/colors.txt
   flags=$(jq -r '.monobandpsuedocolor.flags' <<<$style)
-  torender=${filename::-4}_color.tif
+  torender=${filename%.*}_color.tif
   sudo $DC_DIR/docker-compose exec -T pg_gdal sh -c "gdaldem color-relief $flags $DATA_DIR/$filename $DATA_DIR/colors.txt $DATA_DIR/$torender"
   rm $DATA_DIR/colors.txt $DATA_DIR/$layername.*
 fi
@@ -21,4 +23,4 @@ then
   sudo echo "*.png" > $DATA_DIR/html/$layername/.gitignore
 fi
 
-sudo rm $DATA_DIR/${torender::-4}.*
+sudo rm $DATA_DIR/${torender%.*}.*

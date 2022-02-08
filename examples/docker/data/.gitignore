@@ -15,5 +15,5 @@
 *.sql
 *.json
 
-
+Surface_Temperature_30m/
 !collection.json

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 python3 $ETL_DIR/wazefeed.py $DATA_DIR $filename
 rm $DATA_DIR/$filename
 for file in $DATA_DIR/*.json
