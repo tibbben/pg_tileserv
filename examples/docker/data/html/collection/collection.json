@@ -26,7 +26,11 @@
         "date": "2020",
         "abstract": "ATSDR’s Geospatial Research, Analysis & Services Program (GRASP) created Centers for Disease Control and Prevention Social Vulnerability Index (CDC SVI or simply SVI, hereafter) to help public health officials and emergency response planners identify and map the communities that will most likely need support before, during, and after a hazardous event.SVI indicates the relative vulnerability of every U.S. Census tract. Census tracts are subdivisions of counties for which the Census collects statistical data. SVI ranks the tracts on 15 social factors, including unemployment, minority status, and disability, and further groups them into four related themes. Thus, each tract receives a ranking for each Census variable and for each of the four themes, as well as an overall ranking. In addition to tract-level rankings, SVI 2010, 2014, 2016, and 2018 also have corresponding rankings at the county level. Notes below that describe “tract” methods also refer to county methods."
       },
-      "style": {}
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
     },
     { 
       "id": "2",
@@ -59,7 +63,11 @@
         "date": "2021-10-21",
         "abstract": "The Toxics Release Inventory (TRI) Program tracks the industrial management of toxic chemicals that may cause harm to human health and the environment. TRI data are reported by certain industrial and federal facilities. EPA makes these data available through multiple online tools, many of which add context to help make the reported data more understandable."
       },
-      "style": {}
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
     },
     { 
       "id": "3",
@@ -87,7 +95,11 @@
         "date": "2021",
         "abstract": "Simple country outlines for the world."
       },
-      "style": {}
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
     },
     { 
       "id": "4",
@@ -115,7 +127,11 @@
         "date": "2022-01-31",
         "abstract": "Location data for fire hydrants in Vancouver BC"
       },
-      "style": {}
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
     },
     { 
       "id": "5",
@@ -123,7 +139,7 @@
         "url": "https://na-georss.waze.com/rtserver/web/TGeoRSS?tk=ccp_partner&format=JSON&types=traffic%2Calerts%2Cirregularities&polygon=-80.214000%2C25.810000%3B-80.359000%2C25.807000%3B-80.486000%2C25.805000%3B-80.481000%2C25.568000%3B-80.294000%2C25.566000%3B-80.272000%2C25.625000%3B-80.235000%2C25.715000%3B-80.184000%2C25.761000%3B-80.186000%2C25.811000%3B-80.214000%2C25.810000%3B-80.214000%2C25.810000",
         "download": "curl",
         "filename": "wazefeed.json",
-        "layername": ["waze_jams", "waze_alerts", "waze_irregularities"],
+        "layername": ["jams", "alerts", "irregularities"],
         "format": "json",
         "geometry": ["LineString", "Point", "LineString"],
         "epsg": "4326",
@@ -143,7 +159,11 @@
         "date": "now",
         "abstract": "Live traffic data feed that includes traffic alerts, traffic jams, and traffic irregularities."
       },
-      "style": {}
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
     },
     { 
       "id": "6",
@@ -177,6 +197,7 @@
           "flags": "-alpha"
         },
         "tiles": {
+          "type": "image",
           "zoom": "6-14"
         },
         "transparency": 0.5
@@ -208,7 +229,11 @@
         "date": "2021",
         "abstract": "Census tracts for 2021."
       },
-      "style": {}
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
     },
     { 
       "id": "8",
@@ -234,7 +259,11 @@
         "date": "2020",
         "abstract": "Given a tile address, click coordinates, and a feature count, generate a Voronoi diagram around the N nearest fire hydrants to the click point."
       },
-      "style": {}
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
     }
   ]
 }
