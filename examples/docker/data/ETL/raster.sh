@@ -4,11 +4,11 @@ style=$(jq -r '.style' <<< $item)
 filename=${filename%.*}.tif
 torender=$filename
 
-if [[ " $(jq 'keys' <<<$style) " =~ "monobandpsuedocolor" ]]
+if [[ " $(jq 'keys' <<<$geography) " =~ "monobandpsuedocolor" ]]
 then
-  colorramp=$(jq -r '.monobandpsuedocolor.colorramp' <<<$style)
+  colorramp=$(jq -r '.monobandpsuedocolor.colorramp' <<<$geography)
   echo -e "$colorramp" > $DATA_DIR/colors.txt
-  flags=$(jq -r '.monobandpsuedocolor.flags' <<<$style)
+  flags=$(jq -r '.monobandpsuedocolor.flags' <<<$geography)
   torender=${filename%.*}_color.tif
   sudo $DC_DIR/docker-compose exec -T pg_gdal sh -c "gdaldem color-relief $flags $DATA_DIR/$filename $DATA_DIR/colors.txt $DATA_DIR/$torender"
   rm $DATA_DIR/colors.txt $DATA_DIR/$layername.*

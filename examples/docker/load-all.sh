@@ -30,16 +30,24 @@ do
         fi
 done < temp.txt
 
+# second load all extra SQL functions
+for file in $DATA_DIR/SQL/*.sql
+do
+        file=/work/SQL/$(basename ${file})
+        $DC_DIR/docker-compose exec -T pg_tileserv_db sh -c "cat $file | psql -U $POSTGRES_USER -d $POSTGRES_DB"
+done
+
 DC_DIR=/usr/local/bin
 ETL_DIR=$DATA_DIR/ETL
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . "$DIR/pg.env"
 
-# second perform ETL
+# third perform ETL
 while read item
 do
         source=$(jq '.source' <<< $item)
+        geography=$(jq '.geography' <<< $item)
         filename=$(jq -r '.filename' <<< $source)
         layername=$(jq -r '.layername' <<< $source)
         load=$(jq -r '.load' <<< $source)

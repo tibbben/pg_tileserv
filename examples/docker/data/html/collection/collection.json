@@ -8,8 +8,6 @@
         "filename": "SVI2018_FLORIDA_tract.zip",
         "layername": "florida_svi_2018",
         "format": "zip",
-        "geometry": "MultiPolygon",
-        "epsg": "4326",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
         "load": "shapefile.sh"
@@ -24,11 +22,48 @@
         "relations": [7],
         "type": "dataset",
         "date": "2020",
-        "abstract": "ATSDR’s Geospatial Research, Analysis & Services Program (GRASP) created Centers for Disease Control and Prevention Social Vulnerability Index (CDC SVI or simply SVI, hereafter) to help public health officials and emergency response planners identify and map the communities that will most likely need support before, during, and after a hazardous event.SVI indicates the relative vulnerability of every U.S. Census tract. Census tracts are subdivisions of counties for which the Census collects statistical data. SVI ranks the tracts on 15 social factors, including unemployment, minority status, and disability, and further groups them into four related themes. Thus, each tract receives a ranking for each Census variable and for each of the four themes, as well as an overall ranking. In addition to tract-level rankings, SVI 2010, 2014, 2016, and 2018 also have corresponding rankings at the county level. Notes below that describe “tract” methods also refer to county methods."
+        "subject": ["population","demographics","vulnerability"],
+        "description": "ATSDR’s Geospatial Research, Analysis & Services Program (GRASP) created Centers for Disease Control and Prevention Social Vulnerability Index (CDC SVI or simply SVI, hereafter) to help public health officials and emergency response planners identify and map the communities that will most likely need support before, during, and after a hazardous event.SVI indicates the relative vulnerability of every U.S. Census tract. Census tracts are subdivisions of counties for which the Census collects statistical data. SVI ranks the tracts on 15 social factors, including unemployment, minority status, and disability, and further groups them into four related themes. Thus, each tract receives a ranking for each Census variable and for each of the four themes, as well as an overall ranking. In addition to tract-level rankings, SVI 2010, 2014, 2016, and 2018 also have corresponding rankings at the county level. Notes below that describe “tract” methods also refer to county methods."
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4326",
+        "format": "shp"        
       },
       "style": {
         "tiles": {
-          "type": "vector"
+          "type": "vector",
+          "properties": "fips,e_totpop,spl_themes"
+        },
+        "paint": {
+          "fill": {
+            "fill-color": [
+              "step", 
+              ["to-number", ["get", "spl_themes"]], 
+              "#cccccc", 0, 
+              "#bae4bc", 5.1, "#9adfcd", 6.7, "#73c2d5", 8.3, "#4da9e5", 9.9, "#1d95e6"
+            ],
+            "fill-opacity": 0.33
+          },
+          "line": {
+            "line-color": "#454545",
+            "line-width": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              6, 0.0,
+              12, 0.2,
+              16, 0.6
+            ],
+            "line-opacity": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              6, 0.0,
+              12, 0.1,
+              16, 0.2
+            ]
+          }
         }
       }
     },
@@ -41,12 +76,6 @@
         "filename": "Florida_TRI_2020.csv",
         "layername": "florida_tri_2020",
         "format": "csv",
-        "geometry_columns": {
-          "latitude": "12. LATITUDE",
-          "longitude": "13. LONGITUDE"
-        },
-        "geometry": "Point",
-        "epsg": "4326",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
         "load": "point_csv.sh"
@@ -61,7 +90,17 @@
         "relations": [],
         "type": "dataset",
         "date": "2021-10-21",
-        "abstract": "The Toxics Release Inventory (TRI) Program tracks the industrial management of toxic chemicals that may cause harm to human health and the environment. TRI data are reported by certain industrial and federal facilities. EPA makes these data available through multiple online tools, many of which add context to help make the reported data more understandable."
+        "subject": ["population","demographics","vulnerability"],
+        "description": "The Toxics Release Inventory (TRI) Program tracks the industrial management of toxic chemicals that may cause harm to human health and the environment. TRI data are reported by certain industrial and federal facilities. EPA makes these data available through multiple online tools, many of which add context to help make the reported data more understandable."
+      },
+      "geography": {
+        "geometry": "Point",
+        "epsg": "4326",
+        "format": "csv",
+        "geometry_columns": {
+          "latitude": "12. LATITUDE",
+          "longitude": "13. LONGITUDE"
+        }    
       },
       "style": {
         "tiles": {
@@ -77,8 +116,6 @@
         "filename": "ne_50m_admin_0_countries.zip",
         "layername": "ne_50m_admin_0_countries",
         "format": "zip",
-        "geometry": "MultiPolygon",
-        "epsg": "4326",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
         "load": "shapefile.sh"
@@ -93,7 +130,13 @@
         "relations": [],
         "type": "dataset",
         "date": "2021",
-        "abstract": "Simple country outlines for the world."
+        "subject": ["country boundaries","global","1:50,000,000"],
+        "description": "Simple country outlines for the world."
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4326",
+        "format": "shp"        
       },
       "style": {
         "tiles": {
@@ -109,8 +152,6 @@
         "filename": "water-hydrants.zip",
         "layername": "hydrants",
         "format": "zip",
-        "geometry": "Point",
-        "epsg": "26910",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "1 month",
         "load": "shapefile.sh"
@@ -125,7 +166,13 @@
         "relations": [],
         "type": "dataset",
         "date": "2022-01-31",
-        "abstract": "Location data for fire hydrants in Vancouver BC"
+        "subject": ["fire hydrants","Vancouver","British Colombia"],
+        "description": "Location data for fire hydrants in Vancouver BC"
+      },
+      "geography": {
+        "geometry": "Point",
+        "epsg": "26910",
+        "format": "shp"        
       },
       "style": {
         "tiles": {
@@ -141,8 +188,6 @@
         "filename": "wazefeed.json",
         "layername": ["jams", "alerts", "irregularities"],
         "format": "json",
-        "geometry": ["LineString", "Point", "LineString"],
-        "epsg": "4326",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "2 minutes",
         "load": "wazefeed.sh"
@@ -157,7 +202,13 @@
         "relations": [],
         "type": "rss feed",
         "date": "now",
-        "abstract": "Live traffic data feed that includes traffic alerts, traffic jams, and traffic irregularities."
+        "subject": ["waze","geoRSS","traffic","traffic alerts","traffic jams","traffic irregularities"],
+        "description": "Live traffic data feed that includes traffic alerts, traffic jams, and traffic irregularities."
+      },
+      "geography": {
+        "geometry": ["LineString", "Point", "LineString"],
+        "epsg": "4326",
+        "format": "json"        
       },
       "style": {
         "tiles": {
@@ -173,8 +224,6 @@
         "filename": "Surface_Temperature_30m.zip",
         "layername": "Surface_Temperature_30m",
         "format": "zip",
-        "geometry": "raster",
-        "epsg": "3857",
         "bounds": [[-80.875,25.126],[-80.117,25.979]],
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
@@ -190,19 +239,34 @@
         "relations": [],
         "type": "dataset",
         "date": "2021",
-        "abstract": "Composite maximum temperatures in Miami-Dade County FL derived from Max Landsat 8 ARD (Analysis Ready Data) Surface Temperature from 7 different images ranging from 2011-2020.  Images: LE07_CU_027019_20170830_20181130_C01_V01_ST, LE07_CU_027019_20170814_20181130_C01_V01_ST, LE07_CU_027019_20120731_20190507_C01_V01_ST, LE07_CU_027019_20110915_20181212_C01_V01_ST, LE07_CU_027019_20110713_20181213_C01_V01_ST, LC08_CU_027019_20200814_20200825_C01_V01_ST, and LC08_CU_027019_20160904_20190430_C01_V01_ST."
+        "subject": ["population","demographics","vulnerability"],
+        "description": "Composite maximum temperatures in Miami-Dade County FL derived from Max Landsat 8 ARD (Analysis Ready Data) Surface Temperature from 7 different images ranging from 2011-2020.  Images: LE07_CU_027019_20170830_20181130_C01_V01_ST, LE07_CU_027019_20170814_20181130_C01_V01_ST, LE07_CU_027019_20120731_20190507_C01_V01_ST, LE07_CU_027019_20110915_20181212_C01_V01_ST, LE07_CU_027019_20110713_20181213_C01_V01_ST, LC08_CU_027019_20200814_20200825_C01_V01_ST, and LC08_CU_027019_20160904_20190430_C01_V01_ST."
       },
-      "style": {
+      "geography": {
+        "geometry": "raster",
+        "epsg": "3857",
+        "format": "geoTIFF",
         "monobandpsuedocolor": {
           "colorramp": "0 white 0\n75 yellow\n160 red\n255 white 0",
           "flags": "-alpha"
-        },
+        }      
+      },
+      "style": {
         "tiles": {
           "type": "raster",
           "zoom": "6-14"
         },
-        "properties": {
-          "raster-opacity": 0.3
+        "paint": {
+          "raster": {
+            "raster-opacity": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              6, 0.8,
+              12, 0.6,
+              16, 0.4
+            ]
+          }
         }
       }
     },
@@ -214,8 +278,6 @@
         "filename": "tl_2021_12_tract.zip",
         "layername": "florida_2021_12_tract",
         "format": "zip",
-        "geometry": "shp",
-        "epsg": "4269",
         "lastUpdate": "2021-09-22",
         "updateFrequency": "static",
         "load": "shapefile.sh"
@@ -230,7 +292,13 @@
         "relations": [],
         "type": "dataset",
         "date": "2021",
-        "abstract": "Census tracts for 2021."
+        "subject": ["US Census Bureau","census","tracts","2021"],
+        "description": "Census tracts for 2021."
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4269",
+        "format": "shp"        
       },
       "style": {
         "tiles": {
@@ -254,13 +322,19 @@
         "title": "Voronoi Tile Generator for Point Data",
         "creator": "Paul Ramsey et al (23 more)",
         "url": "https://github.com/CrunchyData/pg_tileserv",
-        "publisher": "CrunchyData (",
+        "publisher": "CrunchyData",
         "rights": "Apache License Version 2.0, January 2004 http://www.apache.org/licenses/",
         "coverage": "Vancouver BC, Canada",
         "relations": [4],
         "type": "function",
         "date": "2020",
-        "abstract": "Given a tile address, click coordinates, and a feature count, generate a Voronoi diagram around the N nearest fire hydrants to the click point."
+        "subject": ["fire hydrants","Vancouver","dynamic"],
+        "description": "Given a tile address, click coordinates, and a feature count, generate a Voronoi diagram around the N nearest fire hydrants to the click point."
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4326",
+        "format": "sql"        
       },
       "style": {
         "tiles": {

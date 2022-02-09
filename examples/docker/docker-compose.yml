@@ -39,6 +39,9 @@ services:
     env_file:
       - pg.env
 
+    #ports:
+    #  - 5434:5432
+
   pg_gdal:
     image: osgeo/gdal:alpine-normal-latest-amd64
 
