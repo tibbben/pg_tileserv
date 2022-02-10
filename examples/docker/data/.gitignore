@@ -17,3 +17,4 @@
 
 Surface_Temperature_30m/
 !collection.json
+!SQL/*.sql
