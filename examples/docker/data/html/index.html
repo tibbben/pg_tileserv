@@ -1,107 +1,403 @@
-<!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-            <title>Surface_Temperature_30m.tif</title>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>curated</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.13.0/mapbox-gl.js'></script>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.13.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style type="text/css">
+      body {margin:0;padding:0;font-family:sans-serif;}
+      #map {position:absolute;top:0;bottom:0;left:0;right:0;}
+      #meta {z-index:2;color:black;background:rgba(255,255,255,0.6);position:absolute;top:10;left:20;padding:10 20;margin:0;width:min-content;}
+      #meta h1 {margin:0;}
+      #meta .properties {font-size:90%; width:auto;}
+      select {font: inherit; font-size:  1.2em; padding:  0.2em}
+      .menu-ui {position:absolute; top:10px; right:66px; z-index:2; font-size:1.0em; padding: 0.2em}
+      path {-webkit-transition:fill 200ms;transition:fill 200ms;}
+    </style>
+  </head>
+<body>
 
-            <!-- Leaflet -->
-            <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.5/dist/leaflet.css" />
-            <script src="https://unpkg.com/leaflet@0.7.5/dist/leaflet.js"></script>
+  <div id="meta">
+    <h1 id='title'></h1>
+    <div id='description'></div>
+    <div id="arguments"></div>
+  </div>
+  <div id='variables' class='menu-ui'></div>
+  <div id="map"></div>
 
-            <style>
-                body { margin:0; padding:0; }
-                body, table, tr, td, th, div, h1, h2, input { font-family: "Calibri", "Trebuchet MS", "Ubuntu", Serif; font-size: 11pt; }
-                #map { position:absolute; top:0; bottom:0; width:100%; } /* full size */
-                .ctl {
-                    padding: 2px 10px 2px 10px;
-                    background: white;
-                    background: rgba(255,255,255,0.9);
-                    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                    border-radius: 5px;
-                    text-align: right;
-                }
-                .title {
-                    font-size: 18pt;
-                    font-weight: bold;
-                }
-                .src {
-                    font-size: 10pt;
-                }
+  <script>
 
-            </style>
+    var map;
+    var mapcolor = "blue";
 
-        </head>
-        <body>
+    var vector_host = "http://52.90.186.160:7800/";
+        vector_host = "http://localhost:7800/";
 
-        <div id="map"></div>
+    var raster_host = "http://52.90.186.160:3000/";
+        raster_host = "http://localhost:3000/";
 
-        <script>
-        /* **** Leaflet **** */
+    var currentlayer = '';
+    var renderedlayers = {};
 
-        // Base layers
-        //  .. OpenStreetMap
-        var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors', minZoom: 6, maxZoom: 14});
+    // This string token utility makes the URL mucking
+    // below a lot less ugly, takes 'this {0} that' and
+    // replaces the numbered token with appropriate argument.
+    if (!String.prototype.format) {
+      String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+          return typeof args[number] != 'undefined'
+            ? args[number]
+            : match
+          ;
+        });
+      };
+    }
 
-        //  .. CartoDB Positron
-        var cartodb = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', minZoom: 6, maxZoom: 14});
+    $.getJSON("collection/collection.json", function(collection) {
+      // A little info for explorers
+      console.log("collection/collection.json");
+      console.log(collection);
 
-        //  .. OSM Toner
-        var toner = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.', minZoom: 6, maxZoom: 14});
+      var layer = {};
 
-        //  .. White background
-        var white = L.tileLayer("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEAAQMAAABmvDolAAAAA1BMVEX///+nxBvIAAAAH0lEQVQYGe3BAQ0AAADCIPunfg43YAAAAAAAAAAA5wIhAAAB9aK9BAAAAABJRU5ErkJggg==", {minZoom: 6, maxZoom: 14});
+      var mapConfig = {
+        'container': 'map',
+        // use 'bounds' or 'center/zoom' but not both at once
+        'center': [-80.4,25.6],
+        'zoom': 10,
+        // 'bounds': layer['bounds'],
+        'style': {
+          'version': 8,
+          'sources': {
+            'carto-light': {
+              'type': 'raster',
+              'tiles': [
+                "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+                "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+                "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+                "https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png"
+              ]
+            }
+          },
+          'layers': [{
+            'id': 'carto-light-layer',
+            'source': 'carto-light',
+            'type': 'raster',
+            'minzoom': 0,
+            'maxzoom': 22
+          }]
+        }
+      };
 
-        // Overlay layers (TMS)
-        var lyr = L.tileLayer('./Surface_Temperature_30m/{z}/{x}/{y}.png', {tms: 0, opacity: 0.4, attribution: "", minZoom: 6, maxZoom: 14});
+      // defaults if no style is given
+      var paints = {
+        "circle":{
+          "circle-color": mapcolor,
+          "circle-radius": 3
+        },
+        "line":{
+          "line-color": mapcolor,
+          "line-width": 1.5
+        },
+        "fill":{
+          "fill-color": mapcolor,
+          "fill-outline-color": mapcolor,
+          "fill-opacity": 0.1
+        },
+        "raster": {
 
-        // Map
-        var map = L.map('map', {
-            center: [25.557189065699347, -80.49611642479498],
-            zoom: 14,
-            minZoom: 6,
-            maxZoom: 14,
-            layers: [osm]
+        }
+      };
+
+      var painttypes = {
+        "Point":"circle",
+        "MultiPoint":"circle",
+        "LineString":"line",
+        "MultiLineString":"line",
+        "Polygon":"fill",
+        "MultiPolygon":"fill",
+        "Raster": "raster"
+      };
+
+      function layerSource(tileurl, tiletype) {
+        return {
+          "type": tiletype,
+          "tiles": [tileurl],
+          "minzoom": layer["minzoom"],
+          "maxzoom": layer["maxzoom"]
+        }
+      };
+
+      function layerId(id, gtype, paint) {
+        return id+"."+gtype+"."+paint;
+      }
+
+      function layerConfig(id, gtype, paint) { 
+        let style = ("paint" in layer) ? layer.paint[paint] : paints[paint];
+        return {
+          "id": layerId(id, gtype, paint),
+          "source": id,
+          "source-layer": id,
+          "type": paint,
+          "paint": style,
+          "filter": ["match", ["geometry-type"], [gtype, "Multi"+gtype], true, false]
+        }
+      };
+
+      function request(querylayer) {
+        var args = {};
+        querylayer["arguments"].forEach(function (item, i) {
+          var nm = item["name"];
+          var inm = "#input-" + nm;
+          args[nm] = $(inm).val();
+        });
+        var argstr = jQuery.param(args);
+        var tileurl = querylayer["tileurl"] + "?" + argstr;
+        console.log("Tile URL = " + tileurl);
+        return tileurl;
+      }
+
+      // Convert feature properties into html
+      function featureHtml(f) {
+        var p = f.properties;
+        var h = "<p>";
+        for (var k in p) {
+          h += "<b>" + k + ":</b> " + p[k] + "<br/>"
+        }
+        h += "</p>";
+        return h
+      }
+
+      var removeallchildren = function(parent) {
+        while (parent.lastChild) {
+          parent.removeChild(parent.lastChild);
+        }
+      }
+
+      var updatemeta = function(l) {
+
+        $("#title").empty();
+        $("#title").append("<span>"+renderedlayers[l]['nicename']+"</span>");
+        $("#description").empty();
+        for (el in renderedlayers[l]['dc']) {
+          $("#description").append("<p>"+el+": "+renderedlayers[l]['dc'][el]+"</p>");
+        }
+      }
+
+      var createform = function(l) {
+        renderedlayers[l]["arguments"].forEach(function (item, i) {
+          var nm = item["name"];
+          var inm = "input-" + nm;
+          var d = item["default"] || "";
+          var lbl = "<label for='{0}'>{1}</label>".format(inm, nm);
+          var inp = "<input id='{0}' value='{1}' size='10'>".format(inm, d);
+          $("#arguments").append("<p>{0} {1}</p>".format(lbl, inp));
         });
 
-        var basemaps = {"OpenStreetMap": osm, "CartoDB Positron": cartodb, "Stamen Toner": toner, "Without background": white}
-        var overlaymaps = {"Layer": lyr}
+        $("#arguments").append("<p><button id='refreshbutton'>Update</button></p>");
+        $("#refreshbutton").on("click", function(e) {
+          tileurl = request(renderedlayers[l])
+          removeFilteredLayers(renderedlayers[l].id);
+          addFilteredLayers(renderedlayers[l].id, tileurl);
+        });
+      }
 
-        // Title
-        var title = L.control();
-        title.onAdd = function(map) {
-            this._div = L.DomUtil.create('div', 'ctl title');
-            this.update();
-            return this._div;
-        };
-        title.update = function(props) {
-            this._div.innerHTML = "Surface_Temperature_30m.tif";
-        };
-        title.addTo(map);
+      var toggleRendered = function(l,vis) {
+        renderedlayers[l]['layers'].forEach(id => {
+          map.setLayoutProperty(id, 'visibility', vis);
+        });
+        if ("arguments" in renderedlayers[l]) {
+          if (vis=="visible") createform(l);
+          else $("#arguments").innerHTML = '';
+        }
+      }
 
-        // Note
-        var src = 'Generated by <a href="https://gdal.org/programs/gdal2tiles.html">GDAL2Tiles</a>, Copyright &copy; 2008 <a href="http://www.klokan.cz/">Klokan Petr Pridal</a>,  <a href="https://gdal.org">GDAL</a> &amp; <a href="http://www.osgeo.org/">OSGeo</a> <a href="http://code.google.com/soc/">GSoC</a>';
-        var title = L.control({position: 'bottomleft'});
-        title.onAdd = function(map) {
-            this._div = L.DomUtil.create('div', 'ctl src');
-            this.update();
-            return this._div;
-        };
-        title.update = function(props) {
-            this._div.innerHTML = src;
-        };
-        title.addTo(map);
+      var $select = $('<select></select>')
+          .appendTo($('#variables'))
+          .on('change', function() {
+            toggleRendered(currentlayer,'none');
+            currentlayer = $(this).val();
+            toggleRendered(currentlayer,'visible');
+            updatemeta(currentlayer);
+            map.fitBounds(renderedlayers[currentlayer]['bounds']);
+          });
 
+      function addLayerBehavior(id) {
+        // When a click event occurs on a feature in the states layer, open a popup at the
+        // location of the click, with description HTML from its properties.
+        map.on('click', id, function(e) {
+          new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(featureHtml(e.features[0]))
+          .addTo(map);
+        });
 
-        // Add base layers
-        L.control.layers(basemaps, overlaymaps, {collapsed: false}).addTo(map);
+        // // Change the cursor to a pointer when the mouse is over the states layer.
+        map.on('mouseenter', id, function() {
+          map.getCanvas().style.cursor = 'pointer';
+        });
 
-        // Fit to overlay bounds (SW and NE points with (lat, lon))
-        map.fitBounds([[25.13476335467927, -80.11761127983121], [25.97961477671943, -80.87462156975874]]);
+        // // Change it back to a pointer when it leaves.
+        map.on('mouseleave', id, function() {
+          map.getCanvas().style.cursor = '';
+        });
+      }
 
-        </script>
+      function addOneLayer(id, gtypebasic, rendered) {
+        map.addLayer(layerConfig(id, gtypebasic, painttypes[gtypebasic]));
+        rendered.push(layerId(id, gtypebasic, painttypes[gtypebasic]));
+        addLayerBehavior(layerId(id, gtypebasic, painttypes[gtypebasic]));
+        if (gtypebasic == "Polygon") {
+          rendered.push(layerId(id, gtypebasic, "line"));
+          map.addLayer(layerConfig(id, gtypebasic, "line"));
+        }
+      }
 
-        </body>
-        </html>
+      function addFilteredLayers(id, url) {
+        map.addSource(id, layerSource(url,"vector"));
+        // Render as point if point
+        map.addLayer(layerConfig(id, "Point", "circle"));
+        addLayerBehavior(layerId(id, "Point", "circle"));
+        // Render as line if line
+        map.addLayer(layerConfig(id, "LineString", "line"));
+        addLayerBehavior(layerId(id, "LineString", "line"));
+        // Render as area (fill) and line (outline) if polygon
+        map.addLayer(layerConfig(id, "Polygon", "fill"));
+        addLayerBehavior(layerId(id, "Polygon", "fill"));
+        map.addLayer(layerConfig(id, "Polygon", "line"));
+      }
 
-        
+      function removeFilteredLayers(id) {
+        map.removeLayer(layerId(id, "Point", "circle"));
+        map.removeLayer(layerId(id, "LineString", "line"));
+        map.removeLayer(layerId(id, "Polygon", "fill"));
+        map.removeLayer(layerId(id, "Polygon", "line"));
+        map.removeSource(id);
+      }
+
+      function addLayers(id, gtype, url, rendered) {
+        if (gtype == "Mixed") {  // function layers 
+          addFilteredLayers(id, url);
+        } else {
+          let tiletype = (gtype === 'Raster') ? "raster" : "vector";
+          map.addSource(id, layerSource(url, tiletype));
+          var gtypebasic = gtype.replace("Multi", "");
+          var gtypes = ["Point", "LineString", "Polygon", "Raster"];
+          // add just one renderer for known types
+          if (gtypes.includes(gtypebasic)) {
+            addOneLayer(id, gtypebasic, rendered);
+          }
+          // add all renderers for unknown types (eg: geometry)
+          else {
+            gtypes.forEach(gt => {
+              addOneLayer(id, gt, rendered);
+            });
+          }
+        }
+
+      }
+
+      var comparebounds = function(b1,b2) {
+        a1 = (b1[3]-b1[1])*(b1[2]-[b1[0]]);
+        a2 = (b2[3]-b2[1])*(b2[2]-[b2[0]]);
+        return (a1 > a2) ? b1 : b2;
+      }
+
+      var setlayer = function(dataset) {
+        render_id = ('group_id' in layer) ? layer.group_id : layer["id"];
+        if (!(render_id in renderedlayers)) {
+          renderedlayers[render_id] = {
+            "layers": [],
+            "bounds": layer['bounds'],
+            "nicename": layer['nicename'],
+            "dc": layer['dc']
+          };
+          if ("arguments" in layer) {
+            renderedlayers[render_id]['arguments'] = layer['arguments'];
+            renderedlayers[render_id]['id'] = layer['id'];
+            renderedlayers[render_id]['tileurl'] = layer['tileurl'];
+          }
+          $('<option></option>').text(layer.nicename).attr('value',render_id).appendTo($select);
+        } else {
+          renderedlayers[render_id]['bounds'] = comparebounds(layer['bounds'],renderedlayers[render_id]['bounds']);
+        }
+        addLayers(layer["id"], layer["geometrytype"], layer["tileurl"], renderedlayers[render_id]['layers']);
+        if (currentlayer === '') {
+          currentlayer=render_id; 
+          map.fitBounds(layer['bounds']);
+          $("#title").append("<span>"+layer['nicename']+"</span>");
+          for (el in layer['dc']) {
+            $("#description").append("<p>"+el+": "+layer['dc'][el]+"</p>");
+          }
+        } else {
+          toggleRendered(render_id,'none')
+        }
+      }
+
+      var setfunction = function(set) {
+
+        layer['bounds'] = set['geography']['bounds'];
+        layer["geometrytype"] = set['geography']['geometry'];
+
+      } 
+
+      var switchset = function(set, dataset, combine=false) {
+        switch(set.style.tiles.type) {
+          case "vector":
+            $.getJSON(vector_host+"public."+dataset+".json", function(l) {
+              layer = l;
+              layer['nicename'] = set.source.nicename;
+              layer["dc"] = set.dc;
+              if ("paint" in set.style) {
+                layer["paint"] = set.style.paint;
+                if (dataset in set.style.paint) layer["paint"] = set.style.paint[dataset]; //console.log('hmm  '+set.style.paint[dataset]); // 
+              }
+              if ("properties" in set.style.tiles) layer["tileurl"] += "?properties=" + set.style.tiles.properties;
+              if (combine) layer['group_id'] = 'public.'+set.source.layername;
+              if ("arguments" in layer) setfunction(set);
+              setlayer(dataset);
+            });
+            break;
+          case "raster":
+            layer =  {
+              "id": 'public.'+set.source.layername,
+              "nicename": set.source.nicename,
+              "bounds": set.geography.bounds,
+              "minzoom": parseInt(set.style.tiles.zoom.split('-')[0]),
+              "maxzoom": parseInt(set.style.tiles.zoom.split('-')[1]),
+              "geometrytype": "Raster",
+              "tileurl": raster_host+set.source.layername+'/{z}/{x}/{y}.png',
+              "properties": set.style.properties,
+              "paint": set.style.paint,
+              "dc": set.dc
+            }
+            setlayer(dataset);
+            break;
+        }
+      }
+
+      // set up the mapbox gl js map object
+      map = new mapboxgl.Map(mapConfig);
+      map.addControl(new mapboxgl.NavigationControl());
+      map.on("load", function() {
+        collection.collection.forEach(set => {
+
+          if (typeof set.source.layername === 'string' || set.source.layername instanceof String) {
+            switchset(set,set.source.layername);
+          } else {
+            set.source.layername.forEach(dataset => {
+              switchset(set,dataset,true);
+            });
+          }
+
+        });
+      });
+
+    });
+
+  </script>
+
+</body>
+</html>

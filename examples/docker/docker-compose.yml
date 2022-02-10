@@ -39,6 +39,7 @@ services:
     env_file:
       - pg.env
 
+    # expose ports for development
     #ports:
     #  - 5434:5432
 

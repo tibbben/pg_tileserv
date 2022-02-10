@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 DATA_DIR=data
+DC_DIR=/usr/local/bin
+ETL_DIR=$DATA_DIR/ETL
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/pg.env"
+
+# get the metadata collection
 echo "$(jq -c '.collection[]' $DATA_DIR/html/collection/collection.json)" > temp.txt
 
 # first download all data
@@ -36,12 +43,6 @@ do
         file=/work/SQL/$(basename ${file})
         $DC_DIR/docker-compose exec -T pg_tileserv_db sh -c "cat $file | psql -U $POSTGRES_USER -d $POSTGRES_DB"
 done
-
-DC_DIR=/usr/local/bin
-ETL_DIR=$DATA_DIR/ETL
-DIR="${BASH_SOURCE%/*}"
-if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
-. "$DIR/pg.env"
 
 # third perform ETL
 while read item
