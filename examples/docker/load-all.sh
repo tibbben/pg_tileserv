@@ -41,7 +41,7 @@ done < temp.txt
 for file in $DATA_DIR/SQL/*.sql
 do
         file=/work/SQL/$(basename ${file})
-        $DC_DIR/docker-compose exec -T pg_tileserv_db sh -c "cat $file | psql -U $POSTGRES_USER -d $POSTGRES_DB"
+        sudo $DC_DIR/docker-compose exec -T pg_tileserv_db sh -c "cat $file | psql -U $POSTGRES_USER -d $POSTGRES_DB"
 done
 
 # third perform ETL
@@ -56,4 +56,4 @@ do
         . "$DIR/$ETL_DIR/$load"
 done < temp.txt
 
-rm temp.txt
+# rm temp.txt
