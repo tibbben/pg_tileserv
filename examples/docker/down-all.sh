@@ -37,25 +37,3 @@ do
         fi
 done < temp.txt
 
-# second load all extra SQL functions
-for file in $DATA_DIR/SQL/*.sql
-do
-        file=/work/SQL/$(basename ${file})
-        sudo $DC_DIR/docker-compose exec -T pg_tileserv_db sh -c "cat $file | psql -U $POSTGRES_USER -d $POSTGRES_DB"
-done
-
-# third perform ETL
-while read item
-do
-        source=$(jq '.source' <<< $item)
-        geography=$(jq '.geography' <<< $item)
-        filename=$(jq -r '.filename' <<< $source)
-        layername=$(jq -r '.layername' <<< $source)
-	echo ------------------------------ start $layername
-        load=$(jq -r '.load' <<< $source)
-        echo $DIR/$ETL_DIR/$load
-        . "$DIR/$ETL_DIR/$load" </dev/null
-	echo ------------------------------ done with $layername
-done < temp.txt
-
-# rm temp.txt

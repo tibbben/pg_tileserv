@@ -20,8 +20,8 @@
 
   <div id="meta">
     <h1 id='title'></h1>
-    <div id='description'></div>
     <div id="arguments"></div>
+    <div id='description'></div>
   </div>
   <div id='variables' class='menu-ui'></div>
   <div id="map"></div>
@@ -31,11 +31,11 @@
     var map;
     var mapcolor = "blue";
 
-    var vector_host = "http://52.90.186.160:7800/";
-        vector_host = "http://localhost:7800/";
+    var vector_host = "http://52.90.77.212:7800/";
+        // vector_host = "http://localhost:7800/";
 
-    var raster_host = "http://52.90.186.160:3000/";
-        raster_host = "http://localhost:3000/";
+    var raster_host = "http://52.90.77.212:3000/";
+        // raster_host = "http://localhost:3000/";
 
     var currentlayer = '';
     var renderedlayers = {};
@@ -53,6 +53,26 @@
           ;
         });
       };
+    }
+
+    // Given a click point, update the UI to show the coordinates.
+    function setClick(lonlat) {
+      $("#input-lon").val(lonlat.lng);
+      $("#input-lat").val(lonlat.lat);
+    }
+
+    // Read the last click point from the UI form.
+    function getClick() {
+      var c = {};
+      c['lng'] = $("#input-lon").val();
+      c['lat'] = $("#input-lat").val();
+      return c;
+    }
+
+    // Read the count value from the count radiobuttons
+    function getCount() {
+      var radios = $('#input-count');
+      return radio.val();
     }
 
     $.getJSON("collection/collection.json", function(collection) {
@@ -182,11 +202,12 @@
         $("#title").append("<span>"+renderedlayers[l]['nicename']+"</span>");
         $("#description").empty();
         for (el in renderedlayers[l]['dc']) {
-          $("#description").append("<p>"+el+": "+renderedlayers[l]['dc'][el]+"</p>");
+		$("#description").append("<p><b>"+el+"</b>: "+renderedlayers[l]['dc'][el]+"</p>");
         }
       }
 
       var createform = function(l) {
+        $("#arguments").append("<hr>");
         renderedlayers[l]["arguments"].forEach(function (item, i) {
           var nm = item["name"];
           var inm = "input-" + nm;
@@ -198,10 +219,12 @@
 
         $("#arguments").append("<p><button id='refreshbutton'>Update</button></p>");
         $("#refreshbutton").on("click", function(e) {
+          layer = renderedlayers[l];
           tileurl = request(renderedlayers[l])
           removeFilteredLayers(renderedlayers[l].id);
-          addFilteredLayers(renderedlayers[l].id, tileurl);
+          addFilteredLayers(renderedlayers[l].id, tileurl, renderedlayers[l].layers);
         });
+        $("#arguments").append("<hr>");
       }
 
       var toggleRendered = function(l,vis) {
@@ -219,8 +242,8 @@
           .on('change', function() {
             toggleRendered(currentlayer,'none');
             currentlayer = $(this).val();
-            toggleRendered(currentlayer,'visible');
             updatemeta(currentlayer);
+            toggleRendered(currentlayer,'visible');
             map.fitBounds(renderedlayers[currentlayer]['bounds']);
           });
 
@@ -255,18 +278,18 @@
         }
       }
 
-      function addFilteredLayers(id, url) {
+      function addFilteredLayers(id, url, rendered) {
         map.addSource(id, layerSource(url,"vector"));
         // Render as point if point
-        map.addLayer(layerConfig(id, "Point", "circle"));
-        addLayerBehavior(layerId(id, "Point", "circle"));
+        addOneLayer(id, "Point", rendered);
+        //addLayerBehavior(layerId(id, "Point", "circle"));
         // Render as line if line
-        map.addLayer(layerConfig(id, "LineString", "line"));
-        addLayerBehavior(layerId(id, "LineString", "line"));
+        addOneLayer(id, "LineString", rendered);
+        //addLayerBehavior(layerId(id, "LineString", "line"));
         // Render as area (fill) and line (outline) if polygon
-        map.addLayer(layerConfig(id, "Polygon", "fill"));
-        addLayerBehavior(layerId(id, "Polygon", "fill"));
-        map.addLayer(layerConfig(id, "Polygon", "line"));
+        addOneLayer(id, "Polygon", rendered);
+        //addLayerBehavior(layerId(id, "Polygon", "fill"));
+        //addOneLayer(id, "Polygon", rendered);
       }
 
       function removeFilteredLayers(id) {
@@ -274,12 +297,13 @@
         map.removeLayer(layerId(id, "LineString", "line"));
         map.removeLayer(layerId(id, "Polygon", "fill"));
         map.removeLayer(layerId(id, "Polygon", "line"));
+	renderedlayers[currentlayer].layers = [];
         map.removeSource(id);
       }
 
       function addLayers(id, gtype, url, rendered) {
         if (gtype == "Mixed") {  // function layers 
-          addFilteredLayers(id, url);
+          addFilteredLayers(id, url, rendered);
         } else {
           let tiletype = (gtype === 'Raster') ? "raster" : "vector";
           map.addSource(id, layerSource(url, tiletype));
@@ -315,9 +339,8 @@
             "dc": layer['dc']
           };
           if ("arguments" in layer) {
-            renderedlayers[render_id]['arguments'] = layer['arguments'];
-            renderedlayers[render_id]['id'] = layer['id'];
-            renderedlayers[render_id]['tileurl'] = layer['tileurl'];
+	    let properties = ["arguments","id","tileurl","maxzoom","minzoom"];
+			    properties.forEach(key => { renderedlayers[render_id][key] = layer[key]; });
           }
           $('<option></option>').text(layer.nicename).attr('value',render_id).appendTo($select);
         } else {
@@ -329,7 +352,7 @@
           map.fitBounds(layer['bounds']);
           $("#title").append("<span>"+layer['nicename']+"</span>");
           for (el in layer['dc']) {
-            $("#description").append("<p>"+el+": "+layer['dc'][el]+"</p>");
+	    $("#description").append("<p><b>"+el+"</b>: "+layer['dc'][el]+"</p>");
           }
         } else {
           toggleRendered(render_id,'none')
@@ -393,6 +416,18 @@
           }
 
         });
+      });
+
+      map.on("click", function(evt) {
+	console.log(evt.type);
+	if (currentlayer === "public.hydrants_voronoi") {
+          var lonlat = evt.lngLat;
+          setClick(lonlat);
+          layer = renderedlayers[currentlayer];
+          tileurl = request(layer)
+          removeFilteredLayers(layer.id);
+          addFilteredLayers(layer.id, tileurl, layer.layers);
+	}
       });
 
     });

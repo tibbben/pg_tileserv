@@ -4,7 +4,8 @@ long=$(jq -r '.geometry_columns.longitude' <<< $geography)
 lat=$(jq -r '.geometry_columns.latitude' <<< $geography)
 epsg=$(jq -r '.epsg' <<< $geography)
 # use sqlite3 as a tool for csv ETL 
-sed -i '' '1 s/\(.*\),$/\1/' $DATA_DIR/$filename 
+#sed -i '' '1 s/\(.*\),$/\1/' $DATA_DIR/$filename 
+sed -i '1 s/\(.*\),$/\1/' $DATA_DIR/$filename 
 cat <<SQL | $(which sqlite3)
 .mode csv
 .import $DATA_DIR/$filename $layername
