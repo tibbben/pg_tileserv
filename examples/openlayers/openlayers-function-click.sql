@@ -7,7 +7,7 @@ FUNCTION public.hydrants_voronoi(
             z integer, x integer, y integer,
             lon float8 default -123.129,
             lat float8 default 49.253,
-            count bigint default 0)
+            count bigint default 42)
 RETURNS bytea
 AS $$
   -- Find the N hydrants closest to our click point.
