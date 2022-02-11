@@ -691,7 +691,45 @@
         "url": "https://mrdata.usgs.gov/geology/state/kml/cageol.kmz",
         "download": "wget",
         "filename": "cageol.kmz",
-        "layername": "california_usgs_geology",
+        "layername": "geologic units of california",
+        "nicename": "USGS California Geological Units",
+        "format": "kmz",
+        "zipfolder": "kml",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "kml.sh"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "The State Geologic Map Compilation (SGMC) Geodatabase of the Conterminous United States",
+        "creator": "Horton, John D.",
+        "url": "https://mrdata.usgs.gov/geology/state/",
+        "publisher": "US Geological Survey",
+        "rights": "public domain",
+        "coverage": "California",
+        "relations": [],
+        "type": "dataset",
+        "date": "2017",
+        "subject": ["geology","lithology","structural features","age","fault"],
+        "description": "Digital geologic maps of the US states with consistent lithology, age, GIS database structure, and format"
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4326",
+        "format": "shp"        
+      },
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
+    },
+    { 
+      "id": "15",
+      "source": {
+        "layername": ["faults","folds"],
         "nicename": "USGS California Geological Features",
         "format": "kmz",
         "zipfolder": "kml",
@@ -719,6 +757,47 @@
         "geometry": "MultiPolygon",
         "epsg": "4326",
         "format": "shp"        
+      },
+      "style": {
+        "tiles": {
+          "type": "vector"
+        }
+      }
+    },
+    { 
+      "id": "15",
+      "source": {
+        "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/atoms/files/plate-boundaries.kmz",
+        "download": "wget",
+        "filename": "plate-boundaries.kmz",
+        "layername": ["micro_and_faults","plate_boundaries","plate motion"],
+        "nicename": "Tectonic Plate Boundaries",
+        "format": "kmz",
+        "zipfolder": "kml",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "kml.sh"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "Tectonic Plate Boundaries",
+        "creator": "Earthquake Science Center, USGS",
+        "url": "https://mrdata.usgs.gov/geology/state/",
+        "publisher": "Earthquake Science Center, USGS",
+        "rights": "public domain",
+        "coverage": "global",
+        "relations": [],
+        "type": "dataset",
+        "date": "2019-08-27",
+        "subject": ["geology","plate","tectonic","tectonic plates"],
+        "description": "Digital geologic maps of the US states with consistent lithology, age, GIS database structure, and format"
+      },
+      "geography": {
+        "geometry": ["LineString", "LineString", "Point"],
+        "epsg": "4326",
+        "format": "shp" 
       },
       "style": {
         "tiles": {
