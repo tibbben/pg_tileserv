@@ -32,10 +32,10 @@
     var mapcolor = "blue";
 
     var vector_host = "http://52.90.77.212:7800/";
-        // vector_host = "http://localhost:7800/";
+        vector_host = "http://localhost:7800/";
 
     var raster_host = "http://52.90.77.212:3000/";
-        // raster_host = "http://localhost:3000/";
+        raster_host = "http://localhost:3000/";
 
     var currentlayer = '';
     var renderedlayers = {};
@@ -190,19 +190,12 @@
         return h
       }
 
-      var removeallchildren = function(parent) {
-        while (parent.lastChild) {
-          parent.removeChild(parent.lastChild);
-        }
-      }
-
       var updatemeta = function(l) {
-
         $("#title").empty();
         $("#title").append("<span>"+renderedlayers[l]['nicename']+"</span>");
         $("#description").empty();
         for (el in renderedlayers[l]['dc']) {
-		$("#description").append("<p><b>"+el+"</b>: "+renderedlayers[l]['dc'][el]+"</p>");
+		      $("#description").append("<p><b>"+el+"</b>: "+renderedlayers[l]['dc'][el]+"</p>");
         }
       }
 
@@ -297,7 +290,7 @@
         map.removeLayer(layerId(id, "LineString", "line"));
         map.removeLayer(layerId(id, "Polygon", "fill"));
         map.removeLayer(layerId(id, "Polygon", "line"));
-	renderedlayers[currentlayer].layers = [];
+	      renderedlayers[currentlayer].layers = [];
         map.removeSource(id);
       }
 
@@ -339,7 +332,7 @@
             "dc": layer['dc']
           };
           if ("arguments" in layer) {
-	    let properties = ["arguments","id","tileurl","maxzoom","minzoom"];
+	          let properties = ["arguments","id","tileurl","maxzoom","minzoom"];
 			    properties.forEach(key => { renderedlayers[render_id][key] = layer[key]; });
           }
           $('<option></option>').text(layer.nicename).attr('value',render_id).appendTo($select);
@@ -352,7 +345,7 @@
           map.fitBounds(layer['bounds']);
           $("#title").append("<span>"+layer['nicename']+"</span>");
           for (el in layer['dc']) {
-	    $("#description").append("<p><b>"+el+"</b>: "+layer['dc'][el]+"</p>");
+	          $("#description").append("<p><b>"+el+"</b>: "+layer['dc'][el]+"</p>");
           }
         } else {
           toggleRendered(render_id,'none')
@@ -419,15 +412,15 @@
       });
 
       map.on("click", function(evt) {
-	console.log(evt.type);
-	if (currentlayer === "public.hydrants_voronoi") {
+	      console.log(evt.type);
+	      if (currentlayer === "public.hydrants_voronoi") {
           var lonlat = evt.lngLat;
           setClick(lonlat);
           layer = renderedlayers[currentlayer];
           tileurl = request(layer)
           removeFilteredLayers(layer.id);
           addFilteredLayers(layer.id, tileurl, layer.layers);
-	}
+	      }
       });
 
     });

@@ -15,6 +15,7 @@
 *.sql
 *.json
 
+avg_annual_precip_ca_1981_2010_800m/
 Surface_Temperature_30m/
 !collection.json
 !SQL/*.sql

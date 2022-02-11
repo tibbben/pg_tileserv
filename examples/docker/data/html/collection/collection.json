@@ -14,6 +14,9 @@
         "load": "shapefile.sh",
         "_sub_set": "NOT (stcnty = ANY('{12086,12021,12087,12011,12051,12071,12099}'))"
       },
+      "proposal": {
+
+      },
       "dc": {
         "title": "CDC/ATSDR Social Vulnerability Index 2018",
         "creator": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
@@ -81,7 +84,7 @@
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
         "load": "point_csv.sh",
-        "_sub_set": "NOT (\\\"7. COUNTY\\\" = ANY('{MIAMI_DADE,MONROE,COLLIER,BROWARD,PALM BEACH,HENDRY,LEE}'))"
+        "_subset": "NOT (\"7. COUNTY\" = ANY('{MIAMI_DADE,MONROE,COLLIER,BROWARD,PALM BEACH,HENDRY,LEE}'))"
       },
       "dc": {
         "title": "Toxic Release Inventory 2020",
@@ -93,7 +96,7 @@
         "relations": [],
         "type": "dataset",
         "date": "2021-10-21",
-        "subject": ["pollutants","carcinogens","toxic release inventory","EPA"],
+        "subject": ["pollution","toxic","carcinogens"],
         "description": "The Toxics Release Inventory (TRI) Program tracks the industrial management of toxic chemicals that may cause harm to human health and the environment. TRI data are reported by certain industrial and federal facilities. EPA makes these data available through multiple online tools, many of which add context to help make the reported data more understandable."
       },
       "geography": {
@@ -295,7 +298,7 @@
       "style": {
         "tiles": {
           "type": "raster",
-          "zoom": "3-14"
+          "zoom": "6-14"
         },
         "paint": {
           "raster": {
@@ -346,31 +349,6 @@
       "style": {
         "tiles": {
           "type": "vector"
-        },
-	"paint": {
-          "fill": {
-            "fill-color": "blue",
-            "fill-opacity": 0.2
-          },
-          "line": {
-            "line-color": "#454545",
-            "line-width": [
-              "interpolate",
-              ["exponential", 0.5],
-              ["zoom"],
-              6, 0.1,
-              12, 0.5,
-              16, 0.7
-            ],
-            "line-opacity": [
-              "interpolate",
-              ["exponential", 0.5],
-              ["zoom"],
-              6, 0.0,
-              12, 0.1,
-              16, 0.2
-            ]
-          }
         }
       }
     },
@@ -474,7 +452,7 @@
               ["zoom"],
               6, 0.0,
               12, 0.2,
-              16, 0.7
+              16, 0.6
             ],
             "line-opacity": [ 
               "interpolate",
@@ -482,7 +460,7 @@
               ["zoom"],
               6, 0.0,
               12, 0.1,
-              16, 0.4
+              16, 0.2
             ]
           }
         }
@@ -520,6 +498,231 @@
       "style": {
         "tiles": {
           "type": "none"
+        }
+      }
+    },
+    { 
+      "id": "11",
+      "source": {
+        "url": "https://earthworks.stanford.edu/download/file/stanford-td754wr4701-geotiff.tif",
+        "download": "wget",
+        "filename": "Avg_Annual_Precip_CA_1981_2010_800m.tif",
+        "layername": "avg_annual_precip_ca_1981_2010_800m",
+        "nicename": "CA Average Precipitation 1981 to 2010",
+        "format": "tif",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "raster.sh"
+      },
+      "dc": {
+        "title": "Precipitation (Inches): California, 1981-2010 (800m)",
+        "creator": "Daly, Chris. Taylor, George. Patterson, Will.National Climatic Data Center (U.S.). National Water and Climate Center (U.S.). United States. Defense Mapping Agency.",
+        "url": "https://earthworks.stanford.edu/catalog/stanford-td754wr4701",
+        "publisher": "California. Department of Fish and Game. Marine Resources Region",
+        "rights": "public domain",
+        "coverage": "California, USA, 1981-2010",
+        "relations": [],
+        "type": "dataset",
+        "date": "2007",
+        "subject": ["california","annual","rain and rainfall","Climate", "Precipitation Normals","Digital Elevation Models"],
+        "description": "This raster layer contains the average annual precipitation levels in inches for California from 1981 to 2010. This dataset incorporates a conceptual framework that uniquely addresses the spatial scale and pattern of orographic precipitation. The original PRISM dataset covered the United States. This is a California-only version subsetted from the original data set and converted to California Teale Albers NAD83 using bilinear interpolation by the California Department of Fish and Game (CDFG) at 800m resolution. The grid units are presented in inches with floating point. Care should be taken in estimating precipitation values at any single point on the map. Precipitation estimated for each grid cell is an average over the entire area of that cell; thus, point precipitation can be estimated at a spatial precision no better than half the resolution of a cell. Accuracy of this data set is based on the original specification of the Defense Mapping Agency (DMA) 1 degree digital elevation models (DEMs). The stated accuracy of the original DEMs is 130m circular error with 90% probability."
+      },
+      "geography": {
+        "geometry": "raster",
+        "epsg": "4326",
+        "format": "geoTIFF",
+        "bounds": [[-125.189,32.247],[-113.254,42.181]],
+        "monobandpsuedocolor": {
+          "colorramp": "0 white 0\n1 #e5f2ff\n231 #08306b\n255 white 0",
+          "flags": "-alpha"
+        }      
+      },
+      "style": {
+        "tiles": {
+          "type": "raster",
+          "zoom": "1-7"
+        },
+        "paint": {
+          "raster": {
+            "raster-opacity": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              1, 0.8,
+              3, 0.6,
+              7, 0.4
+            ]
+          }
+        }
+      }
+    },
+    { 
+      "id": "12",
+      "source": {
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson",
+        "download": "curl",
+        "filename": "all_month.geojson",
+        "layername": "all_month",
+        "nicename": "All USGS Earthquakes in Past Month",
+        "format": "geojson",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "1 m",
+        "load": "geojson.sh",
+        "flags": "-nlt POINTZ"
+      },
+      "dc": {
+        "title": "All Earthquakes reported by the USGS in the Past 30 Days",
+        "creator": "USGS",
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php",
+        "publisher": "US Geological Survey",
+        "rights": "public domain",
+        "coverage": "global",
+        "relations": [],
+        "type": "dataset",
+        "date": "now",
+        "subject": ["earthquakes","USGS"],
+        "description": "This raster layer contains the average annual precipitation levels in inches for California from 1981 to 2010. This dataset incorporates a conceptual framework that uniquely addresses the spatial scale and pattern of orographic precipitation. The original PRISM dataset covered the United States. This is a California-only version subsetted from the original data set and converted to California Teale Albers NAD83 using bilinear interpolation by the California Department of Fish and Game (CDFG) at 800m resolution. The grid units are presented in inches with floating point. Care should be taken in estimating precipitation values at any single point on the map. Precipitation estimated for each grid cell is an average over the entire area of that cell; thus, point precipitation can be estimated at a spatial precision no better than half the resolution of a cell. Accuracy of this data set is based on the original specification of the Defense Mapping Agency (DMA) 1 degree digital elevation models (DEMs). The stated accuracy of the original DEMs is 130m circular error with 90% probability."
+      },
+      "geography": {
+        "geometry": "Point",
+        "epsg": "4326",
+        "format": "geoJSON" 
+      },
+      "style": {
+        "tiles": {
+          "type": "vector",
+          "properties": "title,time,felt,place,mag"
+        },
+        "paint": {
+          "circle": {
+            "circle-color": [
+              "interpolate",
+              ["linear"],
+              [ "get", "mag" ],
+              1, "#6633bb",
+              7, "#ff3333"
+            ],
+            "circle-radius": [ 
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              1, [ "*", [ "get", "mag" ], 0.5 ],
+              18, [ "*", [ "get", "mag" ], 5 ]
+            ]
+          }
+        }
+      }
+    },
+    { 
+      "id": "13",
+      "source": {
+        "url": "https://svi.cdc.gov/Documents/Data/2018_SVI_Data/States/California.zip",
+        "download": "wget",
+        "filename": "SVI2018_CALIFORNIA_tract.zip",
+        "layername": "california_svi_2018",
+        "nicename": "Social Vulnerability Index CA 2018",
+        "format": "zip",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "shapefile.sh",
+        "_sub_set": "NOT (stcnty = ANY('{12086,12021,12087,12011,12051,12071,12099}'))"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "CDC/ATSDR Social Vulnerability Index 2018",
+        "creator": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
+        "url": "https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html",
+        "publisher": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
+        "rights": "public domain",
+        "coverage": "California",
+        "relations": [7],
+        "type": "dataset",
+        "date": "2020",
+        "subject": ["population","demographics","vulnerability"],
+        "description": "ATSDR’s Geospatial Research, Analysis & Services Program (GRASP) created Centers for Disease Control and Prevention Social Vulnerability Index (CDC SVI or simply SVI, hereafter) to help public health officials and emergency response planners identify and map the communities that will most likely need support before, during, and after a hazardous event.SVI indicates the relative vulnerability of every U.S. Census tract. Census tracts are subdivisions of counties for which the Census collects statistical data. SVI ranks the tracts on 15 social factors, including unemployment, minority status, and disability, and further groups them into four related themes. Thus, each tract receives a ranking for each Census variable and for each of the four themes, as well as an overall ranking. In addition to tract-level rankings, SVI 2010, 2014, 2016, and 2018 also have corresponding rankings at the county level. Notes below that describe “tract” methods also refer to county methods."
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4326",
+        "format": "shp"        
+      },
+      "style": {
+        "tiles": {
+          "type": "vector",
+          "properties": "fips,e_totpop,spl_themes"
+        },
+        "paint": {
+          "fill": {
+            "fill-color": [
+              "step", 
+              ["to-number", ["get", "spl_themes"]], 
+              "#cccccc", 0, 
+              "#bae4bc", 5.1, "#9adfcd", 6.7, "#73c2d5", 8.3, "#4da9e5", 9.9, "#1d95e6"
+            ],
+            "fill-opacity": 0.33
+          },
+          "line": {
+            "line-color": "#454545",
+            "line-width": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              6, 0.0,
+              12, 0.2,
+              16, 0.6
+            ],
+            "line-opacity": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              6, 0.0,
+              12, 0.1,
+              16, 0.2
+            ]
+          }
+        }
+      }
+    },
+    { 
+      "id": "14",
+      "source": {
+        "url": "https://mrdata.usgs.gov/geology/state/kml/cageol.kmz",
+        "download": "wget",
+        "filename": "cageol.kmz",
+        "layername": "california_usgs_geology",
+        "nicename": "USGS California Geological Features",
+        "format": "kmz",
+        "zipfolder": "kml",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "kml.sh"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "The State Geologic Map Compilation (SGMC) Geodatabase of the Conterminous United States",
+        "creator": "Horton, John D.",
+        "url": "https://mrdata.usgs.gov/geology/state/",
+        "publisher": "US Geological Survey",
+        "rights": "public domain",
+        "coverage": "California",
+        "relations": [],
+        "type": "dataset",
+        "date": "2017",
+        "subject": ["geology","lithology","structural features","age","fault"],
+        "description": "Digital geologic maps of the US states with consistent lithology, age, GIS database structure, and format"
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4326",
+        "format": "shp"        
+      },
+      "style": {
+        "tiles": {
+          "type": "vector"
         }
       }
     }
