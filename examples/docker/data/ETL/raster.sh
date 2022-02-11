@@ -11,7 +11,7 @@ then
   flags=$(jq -r '.monobandpsuedocolor.flags' <<<$geography)
   torender=${filename%.*}_color.tif
   sudo $DC_DIR/docker-compose exec -T pg_gdal sh -c "gdaldem color-relief $flags $DATA_DIR/$filename $DATA_DIR/colors.txt $DATA_DIR/$torender"
-  rm $DATA_DIR/colors.txt $DATA_DIR/$layername.*
+  # rm $DATA_DIR/colors.txt $DATA_DIR/$layername.*
 fi
 
 if [[ " $(jq 'keys' <<<$style) " =~ "tiles" ]]
@@ -23,4 +23,4 @@ then
   sudo echo "*.png" > $DATA_DIR/html/$layername/.gitignore
 fi
 
-sudo rm $DATA_DIR/${torender%.*}.*
+# sudo rm $DATA_DIR/${torender%.*}.*

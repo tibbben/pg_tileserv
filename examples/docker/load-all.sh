@@ -29,8 +29,9 @@ do
                 command+=($save)
                 echo "${command[@]}"
                 eval "${command[@]}"
-                if [ $(jq -r '.format' <<< $source) == "zip" ]
+                if [ $(jq -r '.format' <<< $source) == "zip" ] || [ $(jq -r '.format' <<< $source) == "kmz" ]
                 then
+                        echo unzip $DATA_DIR/$(jq -r '.filename' <<< $source) -d $DATA_DIR
                         unzip $DATA_DIR/$(jq -r '.filename' <<< $source) -d $DATA_DIR
                         rm $DATA_DIR/$filename
                 fi
