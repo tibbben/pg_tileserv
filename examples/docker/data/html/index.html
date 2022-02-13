@@ -16,7 +16,7 @@
       .menu-ui {position:absolute;top:10px;right:66px;z-index:2;font-size:1.0em;padding:0.2em}
       #description {max-height:80%;overflow-y:scroll;flex:1;flex-direction:column;display:flex;margin-bottom:23px;overflow-wrap:break-word;}
       #description p {margin-top:0.6em;margin-bottom:0.3em;}
-      #metadata {z-index:5;position:absolute;width:92%;height:87%;max-width:92%;max-height:87%;left:7px;top:7px;bottom:7px;background-color:rgba(255,255,255,0.9);padding:2em;overflow-x:scroll;overflow-y:scroll;border-radius:13px;border:solid black 1px;display:none;flex-direction:column;}
+      #metadata {z-index:5;position:absolute;width:92%;height:87%;max-width:92%;max-height:87%;left:7px;top:7px;bottom:7px;background-color:rgba(255,255,255,0.9);padding:2em;overflow-x:scroll;overflow-y:scroll;border-radius:13px;border:solid black 1px;flex-direction:column;display: none;}
       #metanav {display:inline-block;}
       #showmeta {font-size:0.8em;color:#aaaaaa;float:right;text-decoration:none;}
       #metatitle {float:left;}
@@ -33,13 +33,13 @@
     <div id="arguments"></div>
     <div id="description"></div>
     <hr>
-    <a href="javascript:$('#metadata').toggle()" id='showmeta'>show metadata</a>
+    <a href="javascript:$('#metadata').toggle();void(0);" id='showmeta'>show metadata</a>
   </div>
   <div id='variables' class='menu-ui'></div>
   <div id='metadata'>
     <div id="metanav">
       <h2 id="metatitle"></h2>
-      <a href="javascript:$('#metadata').toggle()" id="hidemeta"></a>
+      <a href="javascript:$('#metadata').toggle();void(0);" id="hidemeta"></a>
     </div>
     <div id="metacontent"></div>
   </div>
