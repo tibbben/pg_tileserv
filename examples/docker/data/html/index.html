@@ -6,14 +6,16 @@
     <link href='https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.13.0/mapbox-gl.css' rel='stylesheet' />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style type="text/css">
-      body {margin:0;padding:0;font-family:sans-serif;height:100%;width:100%}
+      html {height:100%;}
+      body {margin:0;padding:0;font-family:sans-serif;height:100%;width:100%;}
       #map {position:absolute;top:0;bottom:0;left:0;right:0;}
-      #meta {z-index:2;max-height:92%;color:black;background:rgba(255,255,255,0.6);position:absolute;top:10;left:20;padding:10 20;margin:0;width:min-content;}
+      #meta {z-index:2;max-height:92%;color:black;background:rgba(255,255,255,0.6);position:absolute;top:10;left:20;padding:10 20;margin:0;width:fit-content;max-width: 23%;display:flex-direction:column;height:92%}
       #meta h1 {margin:0;}
-      #meta .properties {font-size:90%; width:auto;}
-      select {font: inherit; font-size:  1.2em; padding:  0.2em}
-      .menu-ui {position:absolute; top:10px; right:66px; z-index:2; font-size:1.0em; padding: 0.2em}
-      #description {max-height:80%; overflow-y: scroll}
+      #meta .properties {font-size:90%;width:auto;}
+      select {font: inherit;font-size:1.2em; padding:0.2em}
+      .menu-ui {position:absolute;top:10px;right:66px;z-index:2;font-size:1.0em;padding:0.2em}
+      #description {max-height:80%;overflow-y:scroll;flex:1;flex-direction:column;display:flex;margin-bottom:23px;overflow-wrap:break-word;}
+      #description p {margin-top:0.6em;margin-bottom:0.3em;}
       path {-webkit-transition:fill 200ms;transition:fill 200ms;}
     </style>
   </head>
@@ -22,7 +24,8 @@
   <div id="meta">
     <h1 id='title'></h1>
     <div id="arguments"></div>
-    <div id='description'></div>
+    <div id="description"></div>
+    <hr>
   </div>
   <div id='variables' class='menu-ui'></div>
   <div id="map"></div>
@@ -33,10 +36,10 @@
     var mapcolor = "blue";
 
     var vector_host = "http://52.90.77.212:7800/";
-        //vector_host = "http://localhost:7800/";
+        vector_host = "http://localhost:7800/";
 
     var raster_host = "http://52.90.77.212:3000/";
-        //raster_host = "http://localhost:3000/";
+        raster_host = "http://localhost:3000/";
 
     var currentlayer = '';
     var renderedlayers = {};
@@ -54,6 +57,25 @@
           ;
         });
       };
+    }
+
+    if(!String.linkify) {
+        String.prototype.linkify = function() {
+
+            // http://, https://, ftp://
+            var urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+
+            // www. sans http:// or https://
+            var pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+
+            // Email addresses
+            var emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
+
+            return this
+                .replace(urlPattern, '<a href="$&">$&</a>')
+                .replace(pseudoUrlPattern, '$1<a href="http://$2">$2</a>')
+                .replace(emailAddressPattern, '<a href="mailto:$&">$&</a>');
+        };
     }
 
     // Given a click point, update the UI to show the coordinates.
@@ -76,7 +98,7 @@
       return radio.val();
     }
 
-    $.getJSON("collection/collection.json", function(collection) {
+    $.getJSON("collection/geology_collection.json", function(collection) {
       // A little info for explorers
       console.log("collection/collection.json");
       console.log(collection);
@@ -86,8 +108,8 @@
       var mapConfig = {
         'container': 'map',
         // use 'bounds' or 'center/zoom' but not both at once
-        'center': [-80.4,25.6],
-        'zoom': 10,
+        'center': [-89.4,32],
+        'zoom':3,
         // 'bounds': layer['bounds'],
         'style': {
           'version': 8,
@@ -100,14 +122,34 @@
                 "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
                 "https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png"
               ]
+            },
+            'esri-world': {
+              'type': 'raster',
+              'tiles': [
+                "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png"
+              ]
             }
           },
+          'default-base': 'carto-light-layer',
           'layers': [{
             'id': 'carto-light-layer',
             'source': 'carto-light',
             'type': 'raster',
             'minzoom': 0,
-            'maxzoom': 22
+            'maxzoom': 22,
+            'layout': {
+              'visibility': 'visible'
+            }
+          },
+          {
+            'id': 'esri-world-layer',
+            'source': 'esri-world',
+            'type': 'raster',
+            'minzoom': 0,
+            'maxzoom': 22,
+            'layout': {
+              'visibility': 'none'
+            }
           }]
         }
       };
@@ -141,6 +183,12 @@
         "MultiPolygon":"fill",
         "Raster": "raster"
       };
+
+      var comparebounds = function(b1,b2) {
+        a1 = (b1[3]-b1[1])*(b1[2]-[b1[0]]);
+        a2 = (b2[3]-b2[1])*(b2[2]-[b2[0]]);
+        return (a1 > a2) ? b1 : b2;
+      }
 
       function layerSource(tileurl, tiletype) {
         return {
@@ -193,15 +241,27 @@
 
       var updatemeta = function(l) {
         $("#title").empty();
-        $("#title").append("<span>"+renderedlayers[l]['nicename']+"</span>");
+        $("#title").append("<span>"+l['nicename']+"</span><hr>");
         $("#description").empty();
-        for (el in renderedlayers[l]['dc']) {
-		      $("#description").append("<p><b>"+el+"</b>: "+renderedlayers[l]['dc'][el]+"</p>");
+        for (el in l['dc']) {
+          let text = l['dc'][el];
+          console.log(el,!Array.isArray(text));
+          if (!Array.isArray(text)) text = text.linkify();
+		      $("#description").append("<p><b>"+el+"</b>: "+text+"</p>");
         }
       }
 
+      var $select = $('<select id="choose"></select>')
+          .appendTo($('#variables'))
+          .on('change', function() {
+            toggleRendered(currentlayer,'none');
+            currentlayer = $(this).val();
+            updatemeta(renderedlayers[currentlayer]);
+            toggleRendered(currentlayer,'visible');
+            map.fitBounds(renderedlayers[currentlayer]['bounds']);
+          });
+
       var createform = function(l) {
-        $("#arguments").append("<hr>");
         renderedlayers[l]["arguments"].forEach(function (item, i) {
           var nm = item["name"];
           var inm = "input-" + nm;
@@ -221,25 +281,50 @@
         $("#arguments").append("<hr>");
       }
 
+      var createfilter = function(l) {
+        let highlight = renderedlayers[l]["highlight"];
+        $("#arguments").append("<hr>");
+        var $filter = $('<select></select>')
+            .appendTo($('#arguments'))
+            .on('change', function() {
+              filterfeatures(highlight.layer_id,highlight.properties,$(this).val())
+            });
+        highlight["filter-values"].forEach(function (item, i) {
+          $('<option></option>').text(item).attr('value',item).appendTo($filter);
+        });
+        $("#arguments").append("<hr>");
+      }
+
+      var filterfeatures = function(layer_id,properties,value) {
+        console.log(layer_id,properties,value);
+        properties.forEach(property => {
+          switch(property.property) {
+            case "circle-color":
+              map.setPaintProperty(layer_id,property.property,[
+                "case", ["in", value, [ "get", "commodity"]], "#ffff00","#dddddd"
+              ])
+              break;
+            case "circle-radius":
+              map.setPaintProperty(layer_id,property.property,[
+                "let","min",["case",["in", value, [ "get", "commodity"]], 4, 2],
+                "max",["case",["in", value, [ "get", "commodity"]], 8, 6],
+                [ "interpolate",["linear"],["zoom"],1, ["var", "min"],18, ["var", "max"]]    
+              ])
+              break;
+          };          
+        });
+      }
+
       var toggleRendered = function(l,vis) {
         renderedlayers[l]['layers'].forEach(id => {
           map.setLayoutProperty(id, 'visibility', vis);
         });
-        if ("arguments" in renderedlayers[l]) {
-          if (vis=="visible") createform(l);
-          else $("#arguments").innerHTML = '';
-        }
+        $("#arguments").empty();
+        if ("arguments" in renderedlayers[l] && vis=="visible") createform(l);
+        if ("highlight" in renderedlayers[l] && vis=="visible") createfilter(l);
+        if ("base" in renderedlayers[l]) map.setLayoutProperty(renderedlayers[l].base, 'visibility', vis);
+        //else map.getLayer('base').source = mapConfig["default-base"];
       }
-
-      var $select = $('<select></select>')
-          .appendTo($('#variables'))
-          .on('change', function() {
-            toggleRendered(currentlayer,'none');
-            currentlayer = $(this).val();
-            updatemeta(currentlayer);
-            toggleRendered(currentlayer,'visible');
-            map.fitBounds(renderedlayers[currentlayer]['bounds']);
-          });
 
       function addLayerBehavior(id) {
         // When a click event occurs on a feature in the states layer, open a popup at the
@@ -251,7 +336,7 @@
           .addTo(map);
         });
 
-        // // Change the cursor to a pointer when the mouse is over the states layer.
+        // Change the cursor to a pointer when the mouse is over the states layer.
         map.on('mouseenter', id, function() {
           map.getCanvas().style.cursor = 'pointer';
         });
@@ -274,16 +359,9 @@
 
       function addFilteredLayers(id, url, rendered) {
         map.addSource(id, layerSource(url,"vector"));
-        // Render as point if point
         addOneLayer(id, "Point", rendered);
-        //addLayerBehavior(layerId(id, "Point", "circle"));
-        // Render as line if line
         addOneLayer(id, "LineString", rendered);
-        //addLayerBehavior(layerId(id, "LineString", "line"));
-        // Render as area (fill) and line (outline) if polygon
         addOneLayer(id, "Polygon", rendered);
-        //addLayerBehavior(layerId(id, "Polygon", "fill"));
-        //addOneLayer(id, "Polygon", rendered);
       }
 
       function removeFilteredLayers(id) {
@@ -310,22 +388,17 @@
           // add all renderers for unknown types (eg: geometry)
           else {
             gtypes.pop();
-	    gtypes.forEach(gt => {
+	            gtypes.forEach(gt => {
               addOneLayer(id, gt, rendered);
             });
           }
         }
-
-      }
-
-      var comparebounds = function(b1,b2) {
-        a1 = (b1[3]-b1[1])*(b1[2]-[b1[0]]);
-        a2 = (b2[3]-b2[1])*(b2[2]-[b2[0]]);
-        return (a1 > a2) ? b1 : b2;
       }
 
       var setlayer = function(dataset) {
-        render_id = ('group_id' in layer) ? layer.group_id : layer["id"];
+
+        // layer grouping
+        let render_id = ('group_id' in layer) ? layer.group_id : layer["id"];
         if (!(render_id in renderedlayers)) {
           renderedlayers[render_id] = {
             "layers": [],
@@ -335,31 +408,30 @@
           };
           if ("arguments" in layer) {
 	          let properties = ["arguments","id","tileurl","maxzoom","minzoom"];
-			    properties.forEach(key => { renderedlayers[render_id][key] = layer[key]; });
+			      properties.forEach(key => { renderedlayers[render_id][key] = layer[key]; });
           }
+          if ("base" in layer) renderedlayers[render_id]["base"] = layer.base;
           $('<option></option>').text(layer.nicename).attr('value',render_id).appendTo($select);
         } else {
           renderedlayers[render_id]['bounds'] = comparebounds(layer['bounds'],renderedlayers[render_id]['bounds']);
         }
+        if ("highlight" in layer["paint"]) renderedlayers[render_id]["highlight"] = layer["paint"]["highlight"];
+
+        // add layer
         addLayers(layer["id"], layer["geometrytype"], layer["tileurl"], renderedlayers[render_id]['layers']);
-        if (currentlayer === '') {
+
+        // set first display layer
+        //if (currentlayer == '') {
+        if (render_id === 'public.geologic units of california') {
           currentlayer=render_id; 
+          $select.val(render_id);
           map.fitBounds(layer['bounds']);
-          $("#title").append("<span>"+layer['nicename']+"</span>");
-          for (el in layer['dc']) {
-	          $("#description").append("<p><b>"+el+"</b>: "+layer['dc'][el]+"</p>");
-          }
+          updatemeta(layer);
         } else {
           toggleRendered(render_id,'none')
         }
+
       }
-
-      var setfunction = function(set) {
-
-        layer['bounds'] = set['geography']['bounds'];
-        layer["geometrytype"] = set['geography']['geometry'];
-
-      } 
 
       var switchset = function(set, dataset, combine=false) {
         switch(set.style.tiles.type) {
@@ -368,13 +440,18 @@
               layer = l;
               layer['nicename'] = set.source.nicename;
               layer["dc"] = set.dc;
-              if ("paint" in set.style) {
-                layer["paint"] = set.style.paint;
-                if (dataset in set.style.paint) layer["paint"] = set.style.paint[dataset]; //console.log('hmm  '+set.style.paint[dataset]); // 
+              if (layer["geometrytype"] === "Geometry") layer["geometrytype"] = set.geography.geometry;
+              if ("paint" in set.style) { // custom styles
+                layer["paint"] = set.style.paint; 
+                if (dataset in set.style.paint) layer["paint"] = set.style.paint[dataset]; 
               }
-              if ("properties" in set.style.tiles) layer["tileurl"] += "?properties=" + set.style.tiles.properties;
-              if (combine) layer['group_id'] = 'public.'+set.source.layername;
-              if ("arguments" in layer) setfunction(set);
+              if ("properties" in set.style.tiles) layer["tileurl"] += "?properties=" + set.style.tiles.properties; // custom tileserv query
+              if (combine) layer['group_id'] = 'public.'+set.source.groupname;
+              if ("arguments" in layer) { // function layer
+                layer['bounds'] = set['geography']['bounds'];
+                layer["geometrytype"] = set['geography']['geometry'];
+              };
+              if ("base" in set.style) layer["base"] = set.style.base;
               setlayer(dataset);
             });
             break;
@@ -400,19 +477,21 @@
       map = new mapboxgl.Map(mapConfig);
       map.addControl(new mapboxgl.NavigationControl());
       map.on("load", function() {
+        map.setLayoutProperty('esri-world-layer', 'visibility', 'none');
         collection.collection.forEach(set => {
 
           if (typeof set.source.layername === 'string' || set.source.layername instanceof String) {
-            switchset(set,set.source.layername);
+            switchset(set,set.source.layername); // simple one-source layer
           } else {
             set.source.layername.forEach(dataset => {
-              switchset(set,dataset,true);
+              switchset(set,dataset,true); // grouped multi-source layer
             });
           }
 
         });
       });
 
+      // only for function layers
       map.on("click", function(evt) {
 	      console.log(evt.type);
 	      if (currentlayer === "public.hydrants_voronoi") {

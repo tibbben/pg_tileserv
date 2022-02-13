@@ -562,7 +562,7 @@
         "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson",
         "download": "curl",
         "filename": "all_month.geojson",
-        "layername": "all_month",
+        "layername": ["all_month","micro plates and major fault zones","plate_boundaries","plate motion"],
         "nicename": "All USGS Earthquakes in Past Month",
         "format": "geojson",
         "lastUpdate": "2022-02-05",
@@ -580,11 +580,11 @@
         "relations": [],
         "type": "dataset",
         "date": "now",
-        "subject": ["earthquakes","USGS"],
-        "description": "This raster layer contains the average annual precipitation levels in inches for California from 1981 to 2010. This dataset incorporates a conceptual framework that uniquely addresses the spatial scale and pattern of orographic precipitation. The original PRISM dataset covered the United States. This is a California-only version subsetted from the original data set and converted to California Teale Albers NAD83 using bilinear interpolation by the California Department of Fish and Game (CDFG) at 800m resolution. The grid units are presented in inches with floating point. Care should be taken in estimating precipitation values at any single point on the map. Precipitation estimated for each grid cell is an average over the entire area of that cell; thus, point precipitation can be estimated at a spatial precision no better than half the resolution of a cell. Accuracy of this data set is based on the original specification of the Defense Mapping Agency (DMA) 1 degree digital elevation models (DEMs). The stated accuracy of the original DEMs is 130m circular error with 90% probability."
+        "subject": ["earthquakes","USGS","seismology","earthquake magnitude"],
+        "description": "The USGS provides live feeds updated every 60 seconds for global earthquake events in a geojson format. The feed includes magnitude, location and title information as well as technical attributes and a link to detailed event information for each earthquake. For documentation see https://earthquake.usgs.gov/data/comcat/index.php and https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php."
       },
       "geography": {
-        "geometry": "Point",
+        "geometry": ["Point","LineString","LineString","Point"],
         "epsg": "4326",
         "format": "geoJSON" 
       },
@@ -594,21 +594,79 @@
           "properties": "title,time,felt,place,mag"
         },
         "paint": {
-          "circle": {
-            "circle-color": [
-              "interpolate",
-              ["linear"],
-              [ "get", "mag" ],
-              1, "#6633bb",
-              7, "#ff3333"
-            ],
-            "circle-radius": [ 
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              1, [ "*", [ "get", "mag" ], 0.5 ],
-              18, [ "*", [ "get", "mag" ], 5 ]
-            ]
+          "all_month": {
+            "circle": {
+              "circle-color": [
+                "interpolate",
+                ["linear"],
+                [ "get", "mag" ],
+                1, "#6633bb",
+                7, "#ff3333"
+              ],
+              "circle-radius": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                1, [ "*", [ "get", "mag" ], 0.5 ],
+                18, [ "*", [ "get", "mag" ], 5 ]
+              ]
+            }
+          },
+          "plate_boundaries": {
+            "line": {
+              "line-color": "#d82a07",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 2,
+                10, 3,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 0.2,
+                12, 0.4,
+                16, 0.8
+              ]
+            }
+          },
+          "micro plates and major fault zones": {
+            "line": {
+              "line-color": "#ea6c12",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1,
+                10, 2,
+                16, 3,
+                18, 4
+              ],
+              "line-opacity": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 0.2,
+                12, 0.4,
+                16, 0.8
+              ]
+            }
+          },
+          "plate motion": {
+            "circle": {
+              "circle-color": "#555555",
+              "circle-radius": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                1, 2,
+                18, 6
+              ]
+            }
           }
         }
       }
@@ -706,6 +764,7 @@
         "title": "The State Geologic Map Compilation (SGMC) Geodatabase of the Conterminous United States",
         "creator": "Horton, John D.",
         "url": "https://mrdata.usgs.gov/geology/state/",
+        "doi": "10.5066/F7WH2N65",
         "publisher": "US Geological Survey",
         "rights": "public domain",
         "coverage": "California",
@@ -713,16 +772,50 @@
         "type": "dataset",
         "date": "2017",
         "subject": ["geology","lithology","structural features","age","fault"],
-        "description": "Digital geologic maps of the US states with consistent lithology, age, GIS database structure, and format"
+        "description": "The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States (https://doi.org/10.5066/F7WH2N65) represents a seamless, spatial database of 48 State geologic maps that range from 1:50,000 to 1:1,000,000 scale. A national digital geologic map database is essential in interpreting other datasets that support numerous types of national-scale studies and assessments, such as those that provide geochemistry, remote sensing, or geophysical data. The SGMC is a compilation of the individual U.S. Geological Survey releases of the Preliminary Integrated Geologic Map Databases for the United States. The SGMC geodatabase also contains updated data for seven States and seven entirely new State geologic maps that have been added since the preliminary databases were published. Numerous errors have been corrected and enhancements added to the preliminary datasets using thorough quality assurance/quality control procedures. The SGMC is not a truly integrated geologic map database because geologic units have not been reconciled across State boundaries. However, the geologic data contained in each State geologic map have been standardized to allow spatial analyses of lithology, age, and stratigraphy at a national scale. A full discussion of the procedures and methodology used to create this dataset is available in the accompanying report: Horton, J.D., San Juan, C.A., and Stoeser, D.B, 2017, The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States (ver. 1.1, August 2017): U.S. Geological Survey Data Series 1052, 46 p., https://doi.org/10.3133/ds1052."
       },
       "geography": {
         "geometry": "MultiPolygon",
         "epsg": "4326",
-        "format": "shp"        
+        "format": "kml",
+        "scale_deonminator": "500000"       
       },
       "style": {
         "tiles": {
           "type": "vector"
+        },
+        "paint": {
+          "fill": {
+            "fill-color": [
+              "match",
+              [ "get", "category" ],
+              "alluvium and marine", "#e0ab4e",
+              "belt rocks", "#21bac8",
+              "franciscan", "#3899d4",
+              "gabbroic", "#58e071",
+              "glacial", "#93edff",
+              "granitic", "#9e8473",
+              "igneous", "#45d289",
+              "intrusive", "#2f32e7",
+              "landslide", "#ed71d9",
+              "limestone", "#8b6fd4",
+              "loosely consolidated", "#e1a82b",
+              "marine", "#80ed71",
+              "marine rocks", "#ecea54",
+              "precambrian rocks", "#c80b34",
+              "pyroclastic", "#8c15e6",
+              "sand", "#3c75f0",
+              "schist", "#77e728",
+              "ultramafic", "#e290ee",
+              "volcanic", "#be6322",
+              "#cccccc"
+            ]
+          },
+          "line": {
+            "line-color": "#888888",
+            "line-width": 0.5,
+            "line-opacity": 0.3
+          }
         }
       }
     },
@@ -735,7 +828,8 @@
         "zipfolder": "kml",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
-        "load": "kml.sh"
+        "load": "kml.sh",
+        "flags": "-nlt LINESTRINGZ"
       },
       "proposal": {
 
@@ -750,17 +844,49 @@
         "relations": [],
         "type": "dataset",
         "date": "2017",
-        "subject": ["geology","lithology","structural features","age","fault"],
+        "subject": ["geology","lithology","structural features","age","fault","fold"],
         "description": "Digital geologic maps of the US states with consistent lithology, age, GIS database structure, and format"
       },
       "geography": {
-        "geometry": "MultiPolygon",
+        "geometry": ["LineString","LineString"],
         "epsg": "4326",
         "format": "shp"        
       },
       "style": {
         "tiles": {
           "type": "vector"
+        },
+        "paint": {
+          "faults": {
+            "line": {
+              "line-color": "#d82a07",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.4
+            }
+          },
+          "folds": {
+            "line": {
+              "line-color": "#ea6c12",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.4
+            }
+          }
         }
       }
     },
@@ -770,7 +896,7 @@
         "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/atoms/files/plate-boundaries.kmz",
         "download": "wget",
         "filename": "plate-boundaries.kmz",
-        "layername": ["micro_and_faults","plate_boundaries","plate motion"],
+        "layername": ["micro plates and major fault zones","plate_boundaries","plate motion"],
         "nicename": "Tectonic Plate Boundaries",
         "format": "kmz",
         "zipfolder": "kml",
@@ -784,15 +910,15 @@
       "dc": {
         "title": "Tectonic Plate Boundaries",
         "creator": "Earthquake Science Center, USGS",
-        "url": "https://mrdata.usgs.gov/geology/state/",
+        "url": "https://www.usgs.gov/media/files/plate-boundaries-kmz-file",
         "publisher": "Earthquake Science Center, USGS",
         "rights": "public domain",
         "coverage": "global",
         "relations": [],
         "type": "dataset",
         "date": "2019-08-27",
-        "subject": ["geology","plate","tectonic","tectonic plates"],
-        "description": "Digital geologic maps of the US states with consistent lithology, age, GIS database structure, and format"
+        "subject": ["geology","plate","tectonic","tectonic plates","tectonic plate movement"],
+        "description": "KMZ file for Google Earth and other applications with plate boundaries."
       },
       "geography": {
         "geometry": ["LineString", "LineString", "Point"],
@@ -802,6 +928,143 @@
       "style": {
         "tiles": {
           "type": "vector"
+        },
+        "paint": {
+          "plate_boundaries": {
+            "line": {
+              "line-color": "#d82a07",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 2,
+                10, 4,
+                16, 6,
+                18, 8
+              ],
+              "line-opacity": 0.8
+            }
+          },
+          "micro plates and major fault zones": {
+            "line": {
+              "line-color": "#ea6c12",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1.5,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.8
+            }
+          },
+          "plate motion": {
+            "circle": {
+              "circle-color": "#444444",
+              "circle-radius": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                1, 3,
+                18, 7
+              ]
+            }
+          }
+        }
+      }
+    },
+    { 
+      "id": "16",
+      "source": {
+        "url": "https://mrdata.usgs.gov/deposit/deposit.kmz",
+        "download": "wget",
+        "filename": "deposit.kmz",
+        "layername": ["mineralpolygons","rareearthoccurences","surfaceworkings"],
+        "nicename": "USGS Mineral Deposits",
+        "format": "kmz",
+        "zipfolder": "kml",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "annual",
+        "load": "kml.sh"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "USMIN Mineral Deposit Database",
+        "creator": "Geology, Geophysics and Geochemistry Center",
+        "url": "https://mrdata.usgs.gov/deposit/",
+        "publisher": "Geology, Geophysics and Geochemistry Center, USGS",
+        "rights": "public domain",
+        "coverage": "USA",
+        "relations": [],
+        "type": "dataset",
+        "date": "late 2010s to early 2020s (various sources)",
+        "subject": ["Cobalt","Germanium","Lithium","Niobium","Rare earths","Rhenium","Tantalum","Tellurium","Tin","Tungsten","surface workings","mines","mining districts","rare earth","minerals"],
+        "description": "A developing national-scale geospatial database that will be an authoritative source of information on the most important mines, mineral deposits, and mineral districts of the United States."
+      },
+      "geography": {
+        "geometry": ["MultiPolygon", "Point", "MultiPolygon"],
+        "epsg": "4326",
+        "format": "kml" 
+      },
+      "style": {
+        "tiles": {
+          "type": "vector"
+        },
+        "paint": {
+          "mineralpolygons": {
+            "line": {
+              "line-color": "#888888",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1.5,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.8
+            },
+            "fill": {
+              "fill-color": "#bbbbbb",
+              "fill-opacity": 0.8
+            }
+          },
+          "rareearthoccurences": {
+            "circle": {
+              "circle-color": "#444444",
+              "circle-radius": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                1, 3,
+                18, 7
+              ]
+            }
+          },
+          "surfaceworkings": {
+            "line": {
+              "line-color": "#888888",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1.5,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.8
+            },
+            "fill": {
+              "fill-color": "#bbbbbb",
+              "fill-opacity": 0.8
+            }
+          }
         }
       }
     }
