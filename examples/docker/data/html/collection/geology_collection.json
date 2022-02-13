@@ -10,29 +10,40 @@
         "nicename": "USGS California Geological Units",
         "format": "kmz",
         "zipfolder": "kml",
-        "lastUpdate": "2022-02-05",
+        "lastUpdate": "2022-02-10",
         "updateFrequency": "static",
+        "dependancies": [],
         "load": "kml.sh"
       },
-      "proposal": {
-
+      "curation": {
+        "statement": "This dataset is the source of truth for geological units and features in the conterminous United States. It includes several sublayers including faults and folds as linear geologic features and geologic units as polygons. This set of data will often be used by all four identified personas as a base reference layer over which other ideas can be sketched or layered. The USGS provides the national level data in several formats (geodatabase, shapefile, and kml) as well as through several web mapping protocols (WMS, WFS, and WMTS). Data is also available at the state specific level in the kml format. ",
+        "notes": "Curation would be performed approximately every five years (depending on USGS update schedules). The ETL loads the files into database containers for tile rendering and live queries. For automated and more frequent ETL it would be useful to explore the WFS service (see visualization notes).",
+        "visualization": "For visualization the features and units are separated. Also, there are subsets in the features dataset, but the fields in the KML were limited, so there was no way to better visualize; there is likely a better source. For the units categorization was also ad hoc and there is likely a better way.",
+        "ETL": "The KML structure that includes multiple named layers makes automatic ETL difficult (ogr2ogr struggles).",
+        "subscription_level": "free"
       },
       "dc": {
         "title": "The State Geologic Map Compilation (SGMC) Geodatabase of the Conterminous United States",
         "creator": "Horton, John D.",
-        "url": "https://mrdata.usgs.gov/geology/state/",
-        "doi": "10.5066/F7WH2N65",
+        "source": "https://mrdata.usgs.gov/geology/state/",
+        "identifier": "10.5066/F7WH2N65",
         "publisher": "US Geological Survey",
         "rights": "public domain",
         "coverage": "California",
-        "relations": [],
+        "relation": [
+          {
+            "id": 15
+          }
+        ],
         "type": "dataset",
+        "provenance": "KMZ unzipped, KML opened in QGIS, each layer saved as geojson, imported into PostGIS with ogr2ogr",
         "date": "2017",
-        "subject": ["geology","lithology","structural features","age","fault"],
+        "subject": ["geology","lithology","geologic units"],
         "description": "The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States (https://doi.org/10.5066/F7WH2N65) represents a seamless, spatial database of 48 State geologic maps that range from 1:50,000 to 1:1,000,000 scale. A national digital geologic map database is essential in interpreting other datasets that support numerous types of national-scale studies and assessments, such as those that provide geochemistry, remote sensing, or geophysical data. The SGMC is a compilation of the individual U.S. Geological Survey releases of the Preliminary Integrated Geologic Map Databases for the United States. The SGMC geodatabase also contains updated data for seven States and seven entirely new State geologic maps that have been added since the preliminary databases were published. Numerous errors have been corrected and enhancements added to the preliminary datasets using thorough quality assurance/quality control procedures. The SGMC is not a truly integrated geologic map database because geologic units have not been reconciled across State boundaries. However, the geologic data contained in each State geologic map have been standardized to allow spatial analyses of lithology, age, and stratigraphy at a national scale. A full discussion of the procedures and methodology used to create this dataset is available in the accompanying report: Horton, J.D., San Juan, C.A., and Stoeser, D.B, 2017, The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States (ver. 1.1, August 2017): U.S. Geological Survey Data Series 1052, 46 p., https://doi.org/10.3133/ds1052."
       },
       "geography": {
         "geometry": "MultiPolygon",
+        "dimension": 2,
         "epsg": "4326",
         "format": "kml",
         "scale_deonminator": "500000"       
@@ -44,27 +55,26 @@
         "paint": {
           "fill": {
             "fill-color": [
-              "match",
-              [ "get", "category" ],
-              "alluvium and marine", "#e0ab4e",
-              "belt rocks", "#21bac8",
-              "franciscan", "#3899d4",
-              "gabbroic", "#58e071",
-              "glacial", "#93edff",
-              "granitic", "#9e8473",
-              "igneous", "#45d289",
-              "intrusive", "#2f32e7",
-              "landslide", "#ed71d9",
-              "limestone", "#8b6fd4",
-              "loosely consolidated", "#adcd4d",
-              "marine", "#80ed71",
-              "marine rocks", "#ecea54",
-              "precambrian rocks", "#c80b34",
-              "pyroclastic", "#8c15e6",
-              "sand", "#3c75f0",
-              "schist", "#77e728",
-              "ultramafic", "#e290ee",
-              "volcanic", "#be6322",
+              "case",
+              [ "in", "alluvium and marine", [ "get", "name" ]], "#e0ab4e",
+              [ "in", "Belt Rocks", [ "get", "name" ]], "#21bac8",
+              [ "in", "ranciscan", [ "get", "name" ]], "#3899d4",
+              [ "in", "gabbroic", [ "get", "name" ]], "#58e071",
+              [ "in", "glacial", [ "get", "name" ]], "#93edff",
+              [ "in", "granitic", [ "get", "name" ]], "#9e8473",
+              [ "in", "igneous", [ "get", "name" ]], "#45d289",
+              [ "in", "intrusive", [ "get", "name" ]], "#2f32e7",
+              [ "in", "landslide", [ "get", "name" ]], "#ed71d9",
+              [ "in", "imestone", [ "get", "name" ]], "#8b6fd4",
+              [ "in", "loosely consolidated", [ "get", "name" ]], "#adcd4d",
+              [ "in", "marine", [ "get", "name" ]], "#80ed71",
+              [ "in", "marine rocks", [ "get", "name" ]], "#ecea54",
+              [ "in", "recambrian rocks", [ "get", "name" ]], "#c80b34",
+              [ "in", "pyroclastic", [ "get", "name" ]], "#8c15e6",
+              [ "in", "sand", [ "get", "name" ]], "#3c75f0",
+              [ "in", "chist", [ "get", "name" ]], "#77e728",
+              [ "in", "ltramafic", [ "get", "name" ]], "#e290ee",
+              [ "in", "volcanic", [ "get", "name" ]], "#be6322",
               "#cccccc"
             ]
           },
@@ -79,6 +89,9 @@
     { 
       "id": "15",
       "source": {
+        "url": "https://mrdata.usgs.gov/geology/state/kml/cageol.kmz",
+        "download": "wget",
+        "filename": "cageol.kmz",
         "layername": ["faults","folds"],
         "groupname": "ca_geo_features",
         "nicename": "USGS California Geological Features",
@@ -86,27 +99,38 @@
         "zipfolder": "kml",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
+        "dependancies": [
+          {
+            "id": 14
+          }
+        ],
         "load": "kml.sh",
         "flags": "-nlt LINESTRINGZ"
       },
-      "proposal": {
-
+      "curation": {
+        "statement": "This dataset is the source of truth for geological units and features in the conterminous United States. It includes several sublayers including faults and folds as linear geologic features and geologic units as polygons. This set of data will often be used by all four identified personas as a base reference layer over which other ideas can be sketched or layered. The USGS provides the national level data in several formats (geodatabase, shapefile, and kml) as well as through several web mapping protocols (WMS, WFS, and WMTS). Data is also available at the state specific level in the kml format. ",
+        "notes": "Curation would be performed approximately every five years (depending on USGS update schedules). The ETL loads the files into database containers for tile rendering and live queries. For automated and more frequent ETL it would be useful to explore the WFS service (see visualization notes).",
+        "visualization": "For visualization the features and units are separated. Also, there are subsets in the features dataset, but the fields in the KML were limited, so there was no way to better visualize; there is likely a better source. For the units categorization was also ad hoc and there is likely a better way.",
+        "ETL": "The KML structure that includes multiple named layers makes automatic ETL difficult (ogr2ogr struggles). The major problem is that the units layer is 2D and the features layer is 3D. Also layer names are problematic for postgres.",
+        "subscription_level": "free"
       },
       "dc": {
         "title": "The State Geologic Map Compilation (SGMC) Geodatabase of the Conterminous United States",
         "creator": "Horton, John D.",
-        "url": "https://mrdata.usgs.gov/geology/state/",
+        "source": "https://mrdata.usgs.gov/geology/state/",
         "publisher": "US Geological Survey",
         "rights": "public domain",
         "coverage": "California",
-        "relations": [],
+        "relation": [],
         "type": "dataset",
+        "provenance": "KMZ unzipped, KML opened in QGIS, each layer saved as geojson, imported into PostGIS with ogr2ogr.",
         "date": "2017",
         "subject": ["geology","lithology","structural features","age","fault","fold"],
         "description": "Digital geologic maps of the US states with consistent lithology, age, GIS database structure, and format"
       },
       "geography": {
         "geometry": ["LineString","LineString"],
+        "dimension": [3,3],
         "epsg": "4326",
         "format": "shp"        
       },
@@ -161,23 +185,37 @@
         "lastUpdate": "2022-02-05",
         "updateFrequency": "1 m",
         "load": "geojson.sh",
+        "dependancies": [
+          {
+            "name": "tectonic plates"
+          }
+        ],
         "flags": "-nlt POINTZ"
+      },
+      "curation": {
+        "statement": "The USGS provides live feeds updated every 60 seconds for global earthquake events in several formats including geojson, KML, CSV, ML, and ATOM. The feed includes magnitude, 3D location, title, and counts of ‘felt it’ reports as well as technical attributes and a link to detailed event information for each earthquake. The layer will be especially useful for educators and government administrators involved in disaster response. Plate tectonic boundaries are also included as a static reference data set.",
+        "notes": "From a curation perspective it will be possible to pull from the feed once per minute and perform an automatic ETL into the database for tile generation. It will also be possible store a historical record that can be used for machine learning and predictive analytics. The tectonic boundaries are static KML from the USGS.",
+        "visualization": "As this is a global visualization, it would be good to be able to use a projection other than the web Mercator.",
+        "ETL": "for the earthquake data automatic ETL enabled, geojson acquired with curl, loaded into postGIS with ogr2ogr, quakes visualized on magnitude (both color and circle size). For the tectonic plate data a USGS KML files was used. There were issues with plates wrapping across the 180 longitude that needed cleaning.",
+        "subscription_level": "free"
       },
       "dc": {
         "title": "All Earthquakes reported by the USGS in the Past 30 Days",
         "creator": "USGS",
-        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php",
+        "source": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php",
         "publisher": "US Geological Survey",
         "rights": "public domain",
         "coverage": "global",
-        "relations": [],
+        "relation": [],
         "type": "dataset",
+        "provenance": "acquired as geojson and loaded with no manipulation to postGIS",
         "date": "now",
         "subject": ["earthquakes","USGS","seismology","earthquake magnitude"],
         "description": "The USGS provides live feeds updated every 60 seconds for global earthquake events in a geojson format. The feed includes magnitude, location and title information as well as technical attributes and a link to detailed event information for each earthquake. For documentation see https://earthquake.usgs.gov/data/comcat/index.php and https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php."
       },
       "geography": {
         "geometry": ["Point","LineString","LineString","Point"],
+        "dimension": [3,2,2,2],
         "epsg": "4326",
         "format": "geoJSON" 
       },
@@ -267,36 +305,42 @@
     { 
       "id": "16",
       "source": {
-        "url": "https://mrdata.usgs.gov/deposit/deposit.kmz",
-        "download": "wget",
-        "filename": "deposit.kmz",
+        "url": "https://mrdata.usgs.gov/services/wfs/deposit?request=GetCapabilities&service=WFS&version=1.1.0",
+        "download": "curl",
+        "filename": "deposit.xml",
         "layername": ["mineralpolygons","rareearthoccurences","surfaceworkings"],
         "groupname": "us_mineral_deposits",
         "nicename": "USGS Mineral Deposits",
-        "format": "kmz",
-        "zipfolder": "kml",
+        "format": "xml",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "annual",
-        "load": "kml.sh"
+        "dependacies": [],
+        "load": "xml.sh"
       },
-      "proposal": {
-
+      "curation": {
+        "statement": "This is a relatively new compilation of three principal datasets for the United States: currently operating extraction operations, visible surface disturbances from mining, and known mining districts. Apparently the sources for these datasets are many and the USGS compilation/curation is still underway. The surface activity layer is traced from ESRI World imagery. The operations layer includes type of activity and commodity information. This layer will be most useful for government administrators and industry professionals. ",
+        "notes": "From a curation perspective it may be better to get the data from the sources identified in the metadata descriptions of this dataset. The currently available KML file is broken and automatic ETL was not possible. As an alternative there is a WFS service that is likely worth exploring in greater detail.",
+        "visualization": "For visualization it is best to use false color imagery as the base map for this dataset to enable seeing surface disturbance. Also, the user can choose which commodity to highlight in the in the extraction operations data set. This choice could also include operation type (mining or refining as example).",
+        "ETL": "the MKZ file for this dataset was broken so I used QGIS to pull the data sets from the WFS server (no automatic ETL yet, but it is possible).",
+        "subscription_level": "free"
       },
       "dc": {
         "title": "USMIN Mineral Deposit Database",
         "creator": "Geology, Geophysics and Geochemistry Center",
-        "url": "https://mrdata.usgs.gov/deposit/",
+        "source": "https://mrdata.usgs.gov/deposit/",
         "publisher": "Geology, Geophysics and Geochemistry Center, USGS",
         "rights": "public domain",
         "coverage": "USA",
-        "relations": [],
+        "relation": [],
         "type": "dataset",
+        "provenance": "WFS service opened in QGIS, each layer saved as geojson, imported into PostGIS with ogr2ogr",
         "date": "late 2010s to early 2020s (various sources)",
         "subject": ["Cobalt","Germanium","Lithium","Niobium","Rare earths","Rhenium","Tantalum","Tellurium","Tin","Tungsten","surface workings","mines","mining districts","rare earth","minerals"],
         "description": "A developing national-scale geospatial database that will be an authoritative source of information on the most important mines, mineral deposits, and mineral districts of the United States."
       },
       "geography": {
         "geometry": ["MultiPolygon", "Point", "MultiPolygon"],
+        "dimension": [2,2,2],
         "epsg": "4326",
         "format": "kml" 
       },
@@ -412,27 +456,33 @@
         "format": "zip",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
-        "load": "shapefile.sh",
-        "_sub_set": "NOT (stcnty = ANY('{12086,12021,12087,12011,12051,12071,12099}'))"
+        "dependancies": [],
+        "load": "shapefile.sh"
       },
-      "proposal": {
-
+     "curation": {
+        "statement": "The Center for Disease Control (CDC) started publishing the Social Vulnerability Index (SVI) in 2011 as a tool to serve planners with a focus on emergency response. The CDC continues to refine and release this index with data from the American Community Survey at the US census tract level. In addition to earthquake response planning, this layer will be useful for community outreach and relations in the extractive industries. The method to calculate the SVI calculates the measurement of vulnerability in four areas: socio economic, household composition and disability, minority status and language, housing type and transportation. While each category is useful there is also an overall index for social vulnerability.",
+        "notes": "ETL will be performed once as a static file. When updates are released they can be added as new datasets in the layer collection. The historical record will be useful for both planners and educators.",
+        "visualization": "For visualization only data for California is shown, but national data is available.",
+        "ETL": "automatic download, unzip, and ETL using shp2pgsql",
+        "subscription_level": "free"
       },
       "dc": {
         "title": "CDC/ATSDR Social Vulnerability Index 2018",
         "creator": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
-        "url": "https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html",
+        "source": "https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html",
         "publisher": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
         "rights": "public domain",
         "coverage": "California",
-        "relations": [7],
+        "relation": [7],
         "type": "dataset",
+        "provenance": "direct download from source, unzip, and direct load to postGIS. No alterations known.",
         "date": "2020",
         "subject": ["population","demographics","vulnerability"],
         "description": "ATSDR’s Geospatial Research, Analysis & Services Program (GRASP) created Centers for Disease Control and Prevention Social Vulnerability Index (CDC SVI or simply SVI, hereafter) to help public health officials and emergency response planners identify and map the communities that will most likely need support before, during, and after a hazardous event.SVI indicates the relative vulnerability of every U.S. Census tract. Census tracts are subdivisions of counties for which the Census collects statistical data. SVI ranks the tracts on 15 social factors, including unemployment, minority status, and disability, and further groups them into four related themes. Thus, each tract receives a ranking for each Census variable and for each of the four themes, as well as an overall ranking. In addition to tract-level rankings, SVI 2010, 2014, 2016, and 2018 also have corresponding rankings at the county level. Notes below that describe “tract” methods also refer to county methods."
       },
       "geography": {
         "geometry": "MultiPolygon",
+        "dimension": 2,
         "epsg": "4326",
         "format": "shp"        
       },
@@ -484,23 +534,33 @@
         "format": "tif",
         "lastUpdate": "2022-02-05",
         "updateFrequency": "static",
+        "dependancies": [],
         "load": "raster.sh"
+      },
+     "curation": {
+        "statement": "This rainfall raster layer indicates modelled estimates of annual rainfall in California. Rain rainfall and temperature are the two principal factors in rock weathering processes. This layer will be of most interest to the researcher persona, but extractive industry professionals and educators will also find it useful. While this layer is a useful visual, more important is that there could be live data queries for individual pixels or sketched areas identified by the user. These queries could then become annotations of the map.",
+        "notes": "For curation the national level PRISM data will be tapped to provide national coverage. Updates could be annual as new models come out. Special attention should also be paid to novel and upcoming machine learning models for this kind of climate prediction.",
+        "visualization": "For visualization it may be worth exploring both a color gradient and a banded categorical approach for the pre-rendered tiles.",
+        "ETL": "automatic curation worked for this data set, but there are minor issues with gdal2tiles.py.",
+        "subscription_level": "free"
       },
       "dc": {
         "title": "Precipitation (Inches): California, 1981-2010 (800m)",
         "creator": "Daly, Chris. Taylor, George. Patterson, Will.National Climatic Data Center (U.S.). National Water and Climate Center (U.S.). United States. Defense Mapping Agency.",
-        "url": "https://earthworks.stanford.edu/catalog/stanford-td754wr4701",
+        "source": "https://earthworks.stanford.edu/catalog/stanford-td754wr4701",
         "publisher": "California. Department of Fish and Game. Marine Resources Region",
         "rights": "public domain",
         "coverage": "California, USA, 1981-2010",
-        "relations": [],
+        "relation": [],
         "type": "dataset",
+        "provenance": "download, reclassify the mono band temperature data to RGB pseudo color (see ramp in geography element) with gdaldem color-relief, create raster tiles with gdal2tiles.py",
         "date": "2007",
         "subject": ["california","annual","rain and rainfall","Climate", "Precipitation Normals","Digital Elevation Models"],
         "description": "This raster layer contains the average annual precipitation levels in inches for California from 1981 to 2010. This dataset incorporates a conceptual framework that uniquely addresses the spatial scale and pattern of orographic precipitation. The original PRISM dataset covered the United States. This is a California-only version subsetted from the original data set and converted to California Teale Albers NAD83 using bilinear interpolation by the California Department of Fish and Game (CDFG) at 800m resolution. The grid units are presented in inches with floating point. Care should be taken in estimating precipitation values at any single point on the map. Precipitation estimated for each grid cell is an average over the entire area of that cell; thus, point precipitation can be estimated at a spatial precision no better than half the resolution of a cell. Accuracy of this data set is based on the original specification of the Defense Mapping Agency (DMA) 1 degree digital elevation models (DEMs). The stated accuracy of the original DEMs is 130m circular error with 90% probability."
       },
       "geography": {
         "geometry": "raster",
+        "dimension": 2,
         "epsg": "4326",
         "format": "geoTIFF",
         "bounds": [[-125.189,32.247],[-113.254,42.181]],

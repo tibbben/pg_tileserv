@@ -9,20 +9,22 @@
       html {height:100%;}
       body {margin:0;padding:0;font-family:sans-serif;height:100%;width:100%;}
       #map {position:absolute;top:0;bottom:0;left:0;right:0;}
-      #meta {z-index:2;max-height:92%;color:black;background:rgba(255,255,255,0.6);position:absolute;top:10;left:20;padding:10 20;margin:0;width:fit-content;max-width: 23%;flex-direction:column;height:92%}
+      select {font: inherit;font-size:1.2em; padding:0.2em}
+      #variables {position:absolute;top:8px;right:66px;z-index:2;font-size:1.0em;padding:0.5em;background-color:rgba(255,255,255,0.6);border:solid #cccccc 0.5px;border-radius:5px}
+      #variables p {margin-top:0px;margin-bottom:7px;}
+      #meta {z-index:2;max-height:92%;color:black;background:rgba(255,255,255,0.6);position:absolute;top:10;left:20;padding:10 20;margin:0;width:fit-content;max-width: 23%;flex-direction:column;height:92%;border-radius:5px;display:flex;}
       #meta h1 {margin:0;}
       #meta .properties {font-size:90%;width:auto;}
-      select {font: inherit;font-size:1.2em; padding:0.2em}
-      .menu-ui {position:absolute;top:10px;right:66px;z-index:2;font-size:1.0em;padding:0.2em}
-      #description {max-height:80%;overflow-y:scroll;flex:1;flex-direction:column;display:flex;margin-bottom:23px;overflow-wrap:break-word;}
+      #description {max-height:80%;overflow-y:scroll;flex:1;flex-direction:column;display:flex;margin-bottom:13px;overflow-wrap:break-word;}
       #description p {margin-top:0.6em;margin-bottom:0.3em;}
       #metadata {z-index:5;position:absolute;width:92%;height:87%;max-width:92%;max-height:87%;left:7px;top:7px;bottom:7px;background-color:rgba(255,255,255,0.9);padding:2em;overflow-x:scroll;overflow-y:scroll;border-radius:13px;border:solid black 1px;flex-direction:column;display: none;}
       #metanav {display:inline-block;}
-      #showmeta {font-size:0.8em;color:#aaaaaa;float:right;text-decoration:none;}
+      #showmeta {font-size:0.8em;color:#777777;float:right;text-decoration:none;}
       #metatitle {float:left;}
       #hidemeta {float:left;margin-left:1em;margin-top:1.3em}
       #hidemeta:after {display:inline-block;content:"\00d7";font-size:0.7em;padding:0.3em;border-radius:3px;border:solid grey 1px;color: grey;}
       #metacontent {max-height:90%;overflow-y:scroll;flex:1;flex-direction:column;display:flex;}
+      #metacontent pre {overflow-x:auto;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;}
       path {-webkit-transition:fill 200ms;transition:fill 200ms;}
     </style>
   </head>
@@ -32,10 +34,12 @@
     <h1 id='title'></h1>
     <div id="arguments"></div>
     <div id="description"></div>
-    <hr>
-    <a href="javascript:$('#metadata').toggle();void(0);" id='showmeta'>show metadata</a>
+    <div>
+      <hr>
+      <a href="javascript:$('#metadata').toggle();void(0);" id='showmeta'>show metadata</a>
+    </div>
   </div>
-  <div id='variables' class='menu-ui'></div>
+  <div id='variables'><p>Please choose a layer to visualize</p></div>
   <div id='metadata'>
     <div id="metanav">
       <h2 id="metatitle"></h2>
@@ -56,6 +60,7 @@
     var raster_host = "http://52.90.77.212:3000/";
         raster_host = "http://localhost:3000/";
 
+    var collection_filename = "collection/geology_collection.json";
     var currentlayer = '';
     var renderedlayers = {};
 
@@ -106,9 +111,9 @@
     }
 
     // load a collection and display
-    $.getJSON("collection/geology_collection.json", function(collection) {
+    $.getJSON(collection_filename, function(collection) {
       // A little info for explorers
-      console.log("collection/collection.json");
+      console.log(collection_filename);
       console.log(collection);
 
       var layer = {};
@@ -233,7 +238,6 @@
         });
         var argstr = jQuery.param(args);
         var tileurl = querylayer["tileurl"] + "?" + argstr;
-        console.log("Tile URL = " + tileurl);
         return tileurl;
       }
 
@@ -255,7 +259,6 @@
         $("#description").empty();
         for (el in l['dc']) {
           let text = l['dc'][el];
-          console.log(el,!Array.isArray(text));
           if (!Array.isArray(text)) text = text.linkify();
 		      $("#description").append("<p><b>"+el+"</b>: "+text+"</p>");
         }
@@ -311,22 +314,12 @@
       }
 
       var filterfeatures = function(layer_id,properties,value) {
-        console.log(layer_id,properties,value);
         properties.forEach(property => {
-          switch(property.property) {
-            case "circle-color":
-              map.setPaintProperty(layer_id,property.property,[
-                "case", ["in", value, [ "get", "commodity"]], "#ffff00","#dddddd"
-              ])
-              break;
-            case "circle-radius":
-              map.setPaintProperty(layer_id,property.property,[
-                "let","min",["case",["in", value, [ "get", "commodity"]], 4, 2],
-                "max",["case",["in", value, [ "get", "commodity"]], 8, 6],
-                [ "interpolate",["linear"],["zoom"],1, ["var", "min"],18, ["var", "max"]]    
-              ])
-              break;
-          };          
+          let exp = map.getPaintProperty(layer_id,property.property), update='exp';
+          property.replace.forEach(i => {update+='['+i+']'});
+          update+='="'+value+'"';
+          eval(update);
+          map.setPaintProperty(layer_id,property.property,exp);    
         });
       }
 
@@ -361,13 +354,16 @@
       }
 
       function addOneLayer(id, gtypebasic, rendered) {
-        map.addLayer(layerConfig(id, gtypebasic, painttypes[gtypebasic]));
+        if (!map.getLayer(layerId(id, gtypebasic, painttypes[gtypebasic])))
+          map.addLayer(layerConfig(id, gtypebasic, painttypes[gtypebasic]));
         rendered.push(layerId(id, gtypebasic, painttypes[gtypebasic]));
         addLayerBehavior(layerId(id, gtypebasic, painttypes[gtypebasic]));
         if (gtypebasic == "Polygon") {
           rendered.push(layerId(id, gtypebasic, "line"));
-          map.addLayer(layerConfig(id, gtypebasic, "line"));
+          if (!map.getLayer(layerId(id, gtypebasic, "line")))
+            map.addLayer(layerConfig(id, gtypebasic, "line"));
         }
+
       }
 
       function addFilteredLayers(id, url, rendered) {
@@ -392,7 +388,8 @@
           addFilteredLayers(id, url, rendered);
         } else {
           let tiletype = (gtype === 'Raster') ? "raster" : "vector";
-          map.addSource(id, layerSource(url, tiletype));
+          if (!map.getSource(id)) map.addSource(id, layerSource(url, tiletype)); 
+          // map.getSource('myvectortiles').setSourceProperty(..) to refresh source 
           var gtypebasic = gtype.replace("Multi", "");
           var gtypes = ["Point", "LineString", "Polygon", "Raster"];
           // add just one renderer for known types
@@ -431,7 +428,8 @@
         } else {
           renderedlayers[render_id]['bounds'] = comparebounds(layer['bounds'],renderedlayers[render_id]['bounds']);
         }
-        if ("highlight" in layer["paint"]) renderedlayers[render_id]["highlight"] = layer["paint"]["highlight"];
+        if ("paint" in layer)
+          if ("highlight" in layer["paint"]) renderedlayers[render_id]["highlight"] = layer["paint"]["highlight"];
 
         // add layer
         addLayers(layer["id"], layer["geometrytype"], layer["tileurl"], renderedlayers[render_id]['layers']);
@@ -513,7 +511,6 @@
 
       // only for function layers
       map.on("click", function(evt) {
-	      console.log(evt.type);
 	      if (currentlayer === "public.hydrants_voronoi") {
           var lonlat = evt.lngLat;
           setClick(lonlat);
