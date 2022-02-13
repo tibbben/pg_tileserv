@@ -19,4 +19,5 @@ img/
 avg_annual_precip_ca_1981_2010_800m/
 Surface_Temperature_30m/
 !collection.json
+!geology_collection.json
 !SQL/*.sql

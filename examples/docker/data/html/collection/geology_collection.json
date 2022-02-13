@@ -1,0 +1,532 @@
+{
+  "collection": [
+    { 
+      "id": "14",
+      "source": {
+        "url": "https://mrdata.usgs.gov/geology/state/kml/cageol.kmz",
+        "download": "wget",
+        "filename": "cageol.kmz",
+        "layername": "geologic units of california",
+        "nicename": "USGS California Geological Units",
+        "format": "kmz",
+        "zipfolder": "kml",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "kml.sh"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "The State Geologic Map Compilation (SGMC) Geodatabase of the Conterminous United States",
+        "creator": "Horton, John D.",
+        "url": "https://mrdata.usgs.gov/geology/state/",
+        "doi": "10.5066/F7WH2N65",
+        "publisher": "US Geological Survey",
+        "rights": "public domain",
+        "coverage": "California",
+        "relations": [],
+        "type": "dataset",
+        "date": "2017",
+        "subject": ["geology","lithology","structural features","age","fault"],
+        "description": "The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States (https://doi.org/10.5066/F7WH2N65) represents a seamless, spatial database of 48 State geologic maps that range from 1:50,000 to 1:1,000,000 scale. A national digital geologic map database is essential in interpreting other datasets that support numerous types of national-scale studies and assessments, such as those that provide geochemistry, remote sensing, or geophysical data. The SGMC is a compilation of the individual U.S. Geological Survey releases of the Preliminary Integrated Geologic Map Databases for the United States. The SGMC geodatabase also contains updated data for seven States and seven entirely new State geologic maps that have been added since the preliminary databases were published. Numerous errors have been corrected and enhancements added to the preliminary datasets using thorough quality assurance/quality control procedures. The SGMC is not a truly integrated geologic map database because geologic units have not been reconciled across State boundaries. However, the geologic data contained in each State geologic map have been standardized to allow spatial analyses of lithology, age, and stratigraphy at a national scale. A full discussion of the procedures and methodology used to create this dataset is available in the accompanying report: Horton, J.D., San Juan, C.A., and Stoeser, D.B, 2017, The State Geologic Map Compilation (SGMC) geodatabase of the conterminous United States (ver. 1.1, August 2017): U.S. Geological Survey Data Series 1052, 46 p., https://doi.org/10.3133/ds1052."
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4326",
+        "format": "kml",
+        "scale_deonminator": "500000"       
+      },
+      "style": {
+        "tiles": {
+          "type": "vector"
+        },
+        "paint": {
+          "fill": {
+            "fill-color": [
+              "match",
+              [ "get", "category" ],
+              "alluvium and marine", "#e0ab4e",
+              "belt rocks", "#21bac8",
+              "franciscan", "#3899d4",
+              "gabbroic", "#58e071",
+              "glacial", "#93edff",
+              "granitic", "#9e8473",
+              "igneous", "#45d289",
+              "intrusive", "#2f32e7",
+              "landslide", "#ed71d9",
+              "limestone", "#8b6fd4",
+              "loosely consolidated", "#adcd4d",
+              "marine", "#80ed71",
+              "marine rocks", "#ecea54",
+              "precambrian rocks", "#c80b34",
+              "pyroclastic", "#8c15e6",
+              "sand", "#3c75f0",
+              "schist", "#77e728",
+              "ultramafic", "#e290ee",
+              "volcanic", "#be6322",
+              "#cccccc"
+            ]
+          },
+          "line": {
+            "line-color": "#888888",
+            "line-width": 0.5,
+            "line-opacity": 0.3
+          }
+        }
+      }
+    },
+    { 
+      "id": "15",
+      "source": {
+        "layername": ["faults","folds"],
+        "groupname": "ca_geo_features",
+        "nicename": "USGS California Geological Features",
+        "format": "kmz",
+        "zipfolder": "kml",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "kml.sh",
+        "flags": "-nlt LINESTRINGZ"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "The State Geologic Map Compilation (SGMC) Geodatabase of the Conterminous United States",
+        "creator": "Horton, John D.",
+        "url": "https://mrdata.usgs.gov/geology/state/",
+        "publisher": "US Geological Survey",
+        "rights": "public domain",
+        "coverage": "California",
+        "relations": [],
+        "type": "dataset",
+        "date": "2017",
+        "subject": ["geology","lithology","structural features","age","fault","fold"],
+        "description": "Digital geologic maps of the US states with consistent lithology, age, GIS database structure, and format"
+      },
+      "geography": {
+        "geometry": ["LineString","LineString"],
+        "epsg": "4326",
+        "format": "shp"        
+      },
+      "style": {
+        "tiles": {
+          "type": "vector"
+        },
+        "paint": {
+          "faults": {
+            "line": {
+              "line-color": "#d82a07",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.4
+            }
+          },
+          "folds": {
+            "line": {
+              "line-color": "#ea6c12",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.4
+            }
+          }
+        }
+      }
+    },
+    { 
+      "id": "12",
+      "source": {
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson",
+        "download": "curl",
+        "filename": "all_month.geojson",
+        "layername": ["all_month","micro plates and major fault zones","plate_boundaries","plate motion"],
+        "groupname": "usgs_earthquake_feed",
+        "nicename": "All USGS Earthquakes in Past Month",
+        "format": "geojson",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "1 m",
+        "load": "geojson.sh",
+        "flags": "-nlt POINTZ"
+      },
+      "dc": {
+        "title": "All Earthquakes reported by the USGS in the Past 30 Days",
+        "creator": "USGS",
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php",
+        "publisher": "US Geological Survey",
+        "rights": "public domain",
+        "coverage": "global",
+        "relations": [],
+        "type": "dataset",
+        "date": "now",
+        "subject": ["earthquakes","USGS","seismology","earthquake magnitude"],
+        "description": "The USGS provides live feeds updated every 60 seconds for global earthquake events in a geojson format. The feed includes magnitude, location and title information as well as technical attributes and a link to detailed event information for each earthquake. For documentation see https://earthquake.usgs.gov/data/comcat/index.php and https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php."
+      },
+      "geography": {
+        "geometry": ["Point","LineString","LineString","Point"],
+        "epsg": "4326",
+        "format": "geoJSON" 
+      },
+      "style": {
+        "tiles": {
+          "type": "vector",
+          "properties": "title,time,felt,place,mag"
+        },
+        "paint": {
+          "all_month": {
+            "circle": {
+              "circle-color": [
+                "interpolate",
+                ["linear"],
+                [ "get", "mag" ],
+                1, "#6633bb",
+                7, "#ff3333"
+              ],
+              "circle-radius": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                1, [ "*", [ "get", "mag" ], 0.5 ],
+                18, [ "*", [ "get", "mag" ], 5 ]
+              ]
+            }
+          },
+          "plate_boundaries": {
+            "line": {
+              "line-color": "#d82a07",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 2,
+                10, 3,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 0.2,
+                12, 0.4,
+                16, 0.8
+              ]
+            }
+          },
+          "micro plates and major fault zones": {
+            "line": {
+              "line-color": "#ea6c12",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1,
+                10, 2,
+                16, 3,
+                18, 4
+              ],
+              "line-opacity": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 0.2,
+                12, 0.4,
+                16, 0.8
+              ]
+            }
+          },
+          "plate motion": {
+            "circle": {
+              "circle-color": "#555555",
+              "circle-radius": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                1, 2,
+                18, 6
+              ]
+            }
+          }
+        }
+      }
+    },
+    { 
+      "id": "16",
+      "source": {
+        "url": "https://mrdata.usgs.gov/deposit/deposit.kmz",
+        "download": "wget",
+        "filename": "deposit.kmz",
+        "layername": ["mineralpolygons","rareearthoccurences","surfaceworkings"],
+        "groupname": "us_mineral_deposits",
+        "nicename": "USGS Mineral Deposits",
+        "format": "kmz",
+        "zipfolder": "kml",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "annual",
+        "load": "kml.sh"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "USMIN Mineral Deposit Database",
+        "creator": "Geology, Geophysics and Geochemistry Center",
+        "url": "https://mrdata.usgs.gov/deposit/",
+        "publisher": "Geology, Geophysics and Geochemistry Center, USGS",
+        "rights": "public domain",
+        "coverage": "USA",
+        "relations": [],
+        "type": "dataset",
+        "date": "late 2010s to early 2020s (various sources)",
+        "subject": ["Cobalt","Germanium","Lithium","Niobium","Rare earths","Rhenium","Tantalum","Tellurium","Tin","Tungsten","surface workings","mines","mining districts","rare earth","minerals"],
+        "description": "A developing national-scale geospatial database that will be an authoritative source of information on the most important mines, mineral deposits, and mineral districts of the United States."
+      },
+      "geography": {
+        "geometry": ["MultiPolygon", "Point", "MultiPolygon"],
+        "epsg": "4326",
+        "format": "kml" 
+      },
+      "style": {
+        "tiles": {
+          "type": "vector"
+        },
+        "base": "esri-world-layer",
+        "paint": {
+          "mineralpolygons": {
+            "line": {
+              "line-color": "#ffaa00",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1.5,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.8
+            },
+            "fill": {
+              "fill-color": "#bbbbbb",
+              "fill-opacity": 0.0
+            }
+          },
+          "rareearthoccurences": {
+            "highlight": {
+              "layer_id": "public.rareearthoccurences.Point.circle",
+              "properties": [
+                {
+                  "property": "circle-color",
+                  "replace": [ 1, 1 ]
+                },
+                {
+                  "property": "circle-radius",
+                  "replace": [ 2, 1, 1 ]
+                }
+              ],
+              "filter-values": ["gold","cobalt","germanium","lithium","niobium","rhenium","tantalum","tellurium","tin","tungsten","copper","silver","zinc"]
+            },
+            "circle": {
+              "circle-color": [
+                "case",
+                ["in", "gold", [ "get", "commodity"]], "#ffff00",
+                "#eeeeee"
+              ],
+              "circle-stroke-color": "#555555",
+              "circle-stroke-width": 0.5,
+              "circle-radius": [
+                "let",
+                "min",
+                [
+                  "case",
+                  ["in", "gold", [ "get", "commodity"]], 6,
+                  4
+                ],
+                "max",
+                [
+                  "case",
+                  ["in", "gold", [ "get", "commodity"]], 9,
+                  6
+                ],
+                [ 
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
+                  1, ["var", "min"],
+                  18, ["var", "max"]
+                ]    
+              ]
+            }
+          },
+          "surfaceworkings": {
+            "line": {
+              "line-color": "#ff2222",
+              "line-width": [ 
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                6, 1.5,
+                10, 2,
+                16, 4,
+                18, 5
+              ],
+              "line-opacity": 0.8
+            },
+            "fill": {
+              "fill-color": "#ffbbbb",
+              "fill-opacity": [ 
+                "interpolate",
+                ["exponential", 0.5],
+                ["zoom"],
+                6, 0.8,
+                12, 0.3,
+                18, 0.1
+              ]
+            }
+          }
+        }
+      }
+    },
+    { 
+      "id": "13",
+      "source": {
+        "url": "https://svi.cdc.gov/Documents/Data/2018_SVI_Data/States/California.zip",
+        "download": "wget",
+        "filename": "SVI2018_CALIFORNIA_tract.zip",
+        "layername": "california_svi_2018",
+        "nicename": "Social Vulnerability Index CA 2018",
+        "format": "zip",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "shapefile.sh",
+        "_sub_set": "NOT (stcnty = ANY('{12086,12021,12087,12011,12051,12071,12099}'))"
+      },
+      "proposal": {
+
+      },
+      "dc": {
+        "title": "CDC/ATSDR Social Vulnerability Index 2018",
+        "creator": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
+        "url": "https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html",
+        "publisher": "Centers for Disease Control and Prevention/ Agency for Toxic Substances and Disease Registry/ Geospatial Research, Analysis, and Services Program",
+        "rights": "public domain",
+        "coverage": "California",
+        "relations": [7],
+        "type": "dataset",
+        "date": "2020",
+        "subject": ["population","demographics","vulnerability"],
+        "description": "ATSDR’s Geospatial Research, Analysis & Services Program (GRASP) created Centers for Disease Control and Prevention Social Vulnerability Index (CDC SVI or simply SVI, hereafter) to help public health officials and emergency response planners identify and map the communities that will most likely need support before, during, and after a hazardous event.SVI indicates the relative vulnerability of every U.S. Census tract. Census tracts are subdivisions of counties for which the Census collects statistical data. SVI ranks the tracts on 15 social factors, including unemployment, minority status, and disability, and further groups them into four related themes. Thus, each tract receives a ranking for each Census variable and for each of the four themes, as well as an overall ranking. In addition to tract-level rankings, SVI 2010, 2014, 2016, and 2018 also have corresponding rankings at the county level. Notes below that describe “tract” methods also refer to county methods."
+      },
+      "geography": {
+        "geometry": "MultiPolygon",
+        "epsg": "4326",
+        "format": "shp"        
+      },
+      "style": {
+        "tiles": {
+          "type": "vector",
+          "properties": "fips,e_totpop,spl_themes"
+        },
+        "paint": {
+          "fill": {
+            "fill-color": [
+              "step", 
+              ["to-number", ["get", "spl_themes"]], 
+              "#cccccc", 0, 
+              "#bae4bc", 5.1, "#9adfcd", 6.7, "#73c2d5", 8.3, "#4da9e5", 9.9, "#1d95e6"
+            ],
+            "fill-opacity": 0.33
+          },
+          "line": {
+            "line-color": "#454545",
+            "line-width": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              6, 0.0,
+              12, 0.2,
+              16, 0.6
+            ],
+            "line-opacity": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              6, 0.0,
+              12, 0.1,
+              16, 0.2
+            ]
+          }
+        }
+      }
+    },
+    { 
+      "id": "11",
+      "source": {
+        "url": "https://earthworks.stanford.edu/download/file/stanford-td754wr4701-geotiff.tif",
+        "download": "wget",
+        "filename": "Avg_Annual_Precip_CA_1981_2010_800m.tif",
+        "layername": "avg_annual_precip_ca_1981_2010_800m",
+        "nicename": "CA Average Precipitation 1981 to 2010",
+        "format": "tif",
+        "lastUpdate": "2022-02-05",
+        "updateFrequency": "static",
+        "load": "raster.sh"
+      },
+      "dc": {
+        "title": "Precipitation (Inches): California, 1981-2010 (800m)",
+        "creator": "Daly, Chris. Taylor, George. Patterson, Will.National Climatic Data Center (U.S.). National Water and Climate Center (U.S.). United States. Defense Mapping Agency.",
+        "url": "https://earthworks.stanford.edu/catalog/stanford-td754wr4701",
+        "publisher": "California. Department of Fish and Game. Marine Resources Region",
+        "rights": "public domain",
+        "coverage": "California, USA, 1981-2010",
+        "relations": [],
+        "type": "dataset",
+        "date": "2007",
+        "subject": ["california","annual","rain and rainfall","Climate", "Precipitation Normals","Digital Elevation Models"],
+        "description": "This raster layer contains the average annual precipitation levels in inches for California from 1981 to 2010. This dataset incorporates a conceptual framework that uniquely addresses the spatial scale and pattern of orographic precipitation. The original PRISM dataset covered the United States. This is a California-only version subsetted from the original data set and converted to California Teale Albers NAD83 using bilinear interpolation by the California Department of Fish and Game (CDFG) at 800m resolution. The grid units are presented in inches with floating point. Care should be taken in estimating precipitation values at any single point on the map. Precipitation estimated for each grid cell is an average over the entire area of that cell; thus, point precipitation can be estimated at a spatial precision no better than half the resolution of a cell. Accuracy of this data set is based on the original specification of the Defense Mapping Agency (DMA) 1 degree digital elevation models (DEMs). The stated accuracy of the original DEMs is 130m circular error with 90% probability."
+      },
+      "geography": {
+        "geometry": "raster",
+        "epsg": "4326",
+        "format": "geoTIFF",
+        "bounds": [[-125.189,32.247],[-113.254,42.181]],
+        "monobandpsuedocolor": {
+          "colorramp": "0 white 0\n1 #e5f2ff\n231 #08306b\n255 white 0",
+          "flags": "-alpha"
+        }      
+      },
+      "style": {
+        "tiles": {
+          "type": "raster",
+          "zoom": "1-7"
+        },
+        "paint": {
+          "raster": {
+            "raster-opacity": [ 
+              "interpolate",
+              ["exponential", 0.5],
+              ["zoom"],
+              1, 0.8,
+              3, 0.6,
+              7, 0.4
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
