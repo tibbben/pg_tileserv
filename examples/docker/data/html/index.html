@@ -9,13 +9,20 @@
       html {height:100%;}
       body {margin:0;padding:0;font-family:sans-serif;height:100%;width:100%;}
       #map {position:absolute;top:0;bottom:0;left:0;right:0;}
-      #meta {z-index:2;max-height:92%;color:black;background:rgba(255,255,255,0.6);position:absolute;top:10;left:20;padding:10 20;margin:0;width:fit-content;max-width: 23%;display:flex-direction:column;height:92%}
+      #meta {z-index:2;max-height:92%;color:black;background:rgba(255,255,255,0.6);position:absolute;top:10;left:20;padding:10 20;margin:0;width:fit-content;max-width: 23%;flex-direction:column;height:92%}
       #meta h1 {margin:0;}
       #meta .properties {font-size:90%;width:auto;}
       select {font: inherit;font-size:1.2em; padding:0.2em}
       .menu-ui {position:absolute;top:10px;right:66px;z-index:2;font-size:1.0em;padding:0.2em}
       #description {max-height:80%;overflow-y:scroll;flex:1;flex-direction:column;display:flex;margin-bottom:23px;overflow-wrap:break-word;}
       #description p {margin-top:0.6em;margin-bottom:0.3em;}
+      #metadata {z-index:5;position:absolute;width:92%;height:87%;max-width:92%;max-height:87%;left:7px;top:7px;bottom:7px;background-color:rgba(255,255,255,0.9);padding:2em;overflow-x:scroll;overflow-y:scroll;border-radius:13px;border:solid black 1px;display:none;flex-direction:column;}
+      #metanav {display:inline-block;}
+      #showmeta {font-size:0.8em;color:#aaaaaa;float:right;text-decoration:none;}
+      #metatitle {float:left;}
+      #hidemeta {float:left;margin-left:1em;margin-top:1.3em}
+      #hidemeta:after {display:inline-block;content:"\00d7";font-size:0.7em;padding:0.3em;border-radius:3px;border:solid grey 1px;color: grey;}
+      #metacontent {max-height:90%;overflow-y:scroll;flex:1;flex-direction:column;display:flex;}
       path {-webkit-transition:fill 200ms;transition:fill 200ms;}
     </style>
   </head>
@@ -26,8 +33,16 @@
     <div id="arguments"></div>
     <div id="description"></div>
     <hr>
+    <a href="javascript:$('#metadata').toggle()" id='showmeta'>show metadata</a>
   </div>
   <div id='variables' class='menu-ui'></div>
+  <div id='metadata'>
+    <div id="metanav">
+      <h2 id="metatitle"></h2>
+      <a href="javascript:$('#metadata').toggle()" id="hidemeta"></a>
+    </div>
+    <div id="metacontent"></div>
+  </div>
   <div id="map"></div>
 
   <script>
@@ -44,9 +59,7 @@
     var currentlayer = '';
     var renderedlayers = {};
 
-    // This string token utility makes the URL mucking
-    // below a lot less ugly, takes 'this {0} that' and
-    // replaces the numbered token with appropriate argument.
+    // Format url correctly
     if (!String.prototype.format) {
       String.prototype.format = function() {
         var args = arguments;
@@ -59,18 +72,12 @@
       };
     }
 
+    // Add href anchors to links in text
     if(!String.linkify) {
         String.prototype.linkify = function() {
-
-            // http://, https://, ftp://
             var urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
-
-            // www. sans http:// or https://
             var pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-
-            // Email addresses
             var emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
-
             return this
                 .replace(urlPattern, '<a href="$&">$&</a>')
                 .replace(pseudoUrlPattern, '$1<a href="http://$2">$2</a>')
@@ -98,6 +105,7 @@
       return radio.val();
     }
 
+    // load a collection and display
     $.getJSON("collection/geology_collection.json", function(collection) {
       // A little info for explorers
       console.log("collection/collection.json");
@@ -215,6 +223,7 @@
         }
       };
 
+      // Add arguments to url
       function request(querylayer) {
         var args = {};
         querylayer["arguments"].forEach(function (item, i) {
@@ -239,6 +248,7 @@
         return h
       }
 
+      // Add dc meta to display
       var updatemeta = function(l) {
         $("#title").empty();
         $("#title").append("<span>"+l['nicename']+"</span><hr>");
@@ -249,8 +259,14 @@
           if (!Array.isArray(text)) text = text.linkify();
 		      $("#description").append("<p><b>"+el+"</b>: "+text+"</p>");
         }
+        $('#metatitle').empty();
+        $('#metatitle').append("Metadata for "+l['nicename']);
+        let metadata = collection.collection.filter(obj => {return obj.id === renderedlayers[currentlayer].meta_id});
+        $('#metacontent').empty();
+        $('#metacontent').append("<pre>"+JSON.stringify(metadata,null,2)+"</pre>");
       }
 
+      // Add 
       var $select = $('<select id="choose"></select>')
           .appendTo($('#variables'))
           .on('change', function() {
@@ -283,7 +299,6 @@
 
       var createfilter = function(l) {
         let highlight = renderedlayers[l]["highlight"];
-        $("#arguments").append("<hr>");
         var $filter = $('<select></select>')
             .appendTo($('#arguments'))
             .on('change', function() {
@@ -327,8 +342,6 @@
       }
 
       function addLayerBehavior(id) {
-        // When a click event occurs on a feature in the states layer, open a popup at the
-        // location of the click, with description HTML from its properties.
         map.on('click', id, function(e) {
           new mapboxgl.Popup()
           .setLngLat(e.lngLat)
@@ -373,6 +386,7 @@
         map.removeSource(id);
       }
 
+      // add render layers for one dataset
       function addLayers(id, gtype, url, rendered) {
         if (gtype == "Mixed") {  // function layers 
           addFilteredLayers(id, url, rendered);
@@ -395,6 +409,7 @@
         }
       }
 
+      // prepare render layers for each dataset 
       var setlayer = function(dataset) {
 
         // layer grouping
@@ -404,7 +419,8 @@
             "layers": [],
             "bounds": layer['bounds'],
             "nicename": layer['nicename'],
-            "dc": layer['dc']
+            "dc": layer['dc'],
+            "meta_id": layer['meta_id']
           };
           if ("arguments" in layer) {
 	          let properties = ["arguments","id","tileurl","maxzoom","minzoom"];
@@ -433,6 +449,7 @@
 
       }
 
+      // prepare individual data sets for addition to map
       var switchset = function(set, dataset, combine=false) {
         switch(set.style.tiles.type) {
           case "vector":
@@ -440,6 +457,7 @@
               layer = l;
               layer['nicename'] = set.source.nicename;
               layer["dc"] = set.dc;
+              layer["meta_id"] = set.id;
               if (layer["geometrytype"] === "Geometry") layer["geometrytype"] = set.geography.geometry;
               if ("paint" in set.style) { // custom styles
                 layer["paint"] = set.style.paint; 
@@ -466,7 +484,8 @@
               "tileurl": raster_host+set.source.layername+'/{z}/{x}/{y}.png',
               "properties": set.style.properties,
               "paint": set.style.paint,
-              "dc": set.dc
+              "dc": set.dc,
+              "meta_id": set.id
             }
             setlayer(dataset);
             break;
@@ -480,6 +499,7 @@
         map.setLayoutProperty('esri-world-layer', 'visibility', 'none');
         collection.collection.forEach(set => {
 
+          // add each layer group
           if (typeof set.source.layername === 'string' || set.source.layername instanceof String) {
             switchset(set,set.source.layername); // simple one-source layer
           } else {
