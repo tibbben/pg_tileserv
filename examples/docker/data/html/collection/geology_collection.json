@@ -19,7 +19,7 @@
         "statement": "This dataset is the source of truth for geological units and features in the conterminous United States. It includes several sublayers including faults and folds as linear geologic features and geologic units as polygons. This set of data will often be used by all four identified personas as a base reference layer over which other ideas can be sketched or layered. The USGS provides the national level data in several formats (geodatabase, shapefile, and kml) as well as through several web mapping protocols (WMS, WFS, and WMTS). Data is also available at the state specific level in the kml format. ",
         "notes": "Curation would be performed approximately every five years (depending on USGS update schedules). The ETL loads the files into database containers for tile rendering and live queries. For automated and more frequent ETL it would be useful to explore the WFS service (see visualization notes).",
         "visualization": "For visualization the features and units are separated. Also, there are subsets in the features dataset, but the fields in the KML were limited, so there was no way to better visualize; there is likely a better source. For the units categorization was also ad hoc and there is likely a better way.",
-        "ETL": "The KML structure that includes multiple named layers makes automatic ETL difficult (ogr2ogr struggles).",
+        "ETL": "The KML structure that includes multiple named layers makes automatic ETL difficult (ogr2ogr struggles). NOTE: may need to simplify polygons for smaller zoom levels, tiles are heavy.",
         "subscription_level": "free"
       },
       "dc": {
@@ -462,8 +462,8 @@
      "curation": {
         "statement": "The Center for Disease Control (CDC) started publishing the Social Vulnerability Index (SVI) in 2011 as a tool to serve planners with a focus on emergency response. The CDC continues to refine and release this index with data from the American Community Survey at the US census tract level. In addition to earthquake response planning, this layer will be useful for community outreach and relations in the extractive industries. The method to calculate the SVI calculates the measurement of vulnerability in four areas: socio economic, household composition and disability, minority status and language, housing type and transportation. While each category is useful there is also an overall index for social vulnerability.",
         "notes": "ETL will be performed once as a static file. When updates are released they can be added as new datasets in the layer collection. The historical record will be useful for both planners and educators.",
-        "visualization": "For visualization only data for California is shown, but national data is available.",
-        "ETL": "automatic download, unzip, and ETL using shp2pgsql",
+        "visualization": "The visualization uses the overall vulnerability index as a number (not the rank). Only data for California is shown, but national data is available.",
+        "ETL": "automatic download, unzip, and ETL using shp2pgsql. NOTE: may need to simplify polygons for smaller zoom levels, tiles are heavy.",
         "subscription_level": "free"
       },
       "dc": {
@@ -489,7 +489,7 @@
       "style": {
         "tiles": {
           "type": "vector",
-          "properties": "fips,e_totpop,spl_themes"
+          "properties": "fips,e_totpop,spl_themes,spl_theme1,spl_theme2,spl_theme3,spl_theme4"
         },
         "paint": {
           "fill": {
