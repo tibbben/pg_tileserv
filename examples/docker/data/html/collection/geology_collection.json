@@ -183,7 +183,7 @@
         "nicename": "All USGS Earthquakes in Past Month",
         "format": "geojson",
         "lastUpdate": "2022-02-05",
-        "updateFrequency": "1 m",
+        "updateFrequency": "1 minute",
         "load": "geojson.sh",
         "dependancies": [
           {

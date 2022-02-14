@@ -198,7 +198,7 @@
         "nicename": "Waze Traffic Feed Miami-Dade FL",
         "format": "json",
         "lastUpdate": "2022-02-05",
-        "updateFrequency": "2 minutes",
+        "updateFrequency": "2 minute",
         "load": "wazefeed.sh"
       },
       "dc": {
@@ -684,7 +684,7 @@
         "nicename": "All USGS Earthquakes in Past Month",
         "format": "geojson",
         "lastUpdate": "2022-02-05",
-        "updateFrequency": "1 m",
+        "updateFrequency": "1 minute",
         "load": "geojson.sh",
         "dependancies": [
           {
