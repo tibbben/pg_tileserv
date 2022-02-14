@@ -397,7 +397,7 @@
           let tiletype = (gtype === 'Raster') ? "raster" : "vector";
           if (!map.getSource(id)) {
             map.addSource(id, layerSource(url, tiletype));
-            if ("liveupdate" in layer) setInterval(map.getSource(id).setSourceProperty(()=>{}),layer.liveupdate); 
+	    if ("liveupdate" in layer) setInterval(()=>{map.getSource(id).setSourceProperty(()=>{});console.log(id,'updated')},layer.liveupdate); 
           }
           // map.getSource('myvectortiles').setSourceProperty(..) to refresh source 
           var gtypebasic = gtype.replace("Multi", "");

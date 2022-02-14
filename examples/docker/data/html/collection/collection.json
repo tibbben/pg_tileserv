@@ -246,14 +246,14 @@
           },
           "jams": {
             "line": {
-              "line-color": [ "interpolate", ["linear"], ["get", "level"], 0, "#fecc5c", 6, "#ea2616" ],
+              "line-color": [ "interpolate", ["linear"], ["get", "level"], 1, "#fecc5c", 5, "#ea2616" ],
               "line-width": [ "*", ["get", "level"] , 2 ]
             }
           },
           "irregularities": {
             "line": {
               "line-color": "#a553b7",
-              "line-width": 7.0
+              "line-width": 14
             }
           }
         }
