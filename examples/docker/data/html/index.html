@@ -60,9 +60,16 @@
     var raster_host = "http://52.90.77.212:3000/";
         //raster_host = "http://localhost:3000/";
 
-    var collection_filename = "collection/geology_collection.json";
     var currentlayer = '';
     var renderedlayers = {};
+
+    var getParam = function(param) {
+      let url = new URL(window.location);
+      return url.searchParams.get(param);
+    }
+
+    var collection_filename = getParam('col') ? "collection/" + getParam('col') : "collection/geology_collection.json";
+    console.log(collection_filename);
 
     // Format url correctly
     if (!String.prototype.format) {
@@ -388,7 +395,10 @@
           addFilteredLayers(id, url, rendered);
         } else {
           let tiletype = (gtype === 'Raster') ? "raster" : "vector";
-          if (!map.getSource(id)) map.addSource(id, layerSource(url, tiletype)); 
+          if (!map.getSource(id)) {
+            map.addSource(id, layerSource(url, tiletype));
+            if ("liveupdate" in layer) setInterval(map.getSource(id).setSourceProperty(()=>{}),layer.liveupdate); 
+          }
           // map.getSource('myvectortiles').setSourceProperty(..) to refresh source 
           var gtypebasic = gtype.replace("Multi", "");
           var gtypes = ["Point", "LineString", "Polygon", "Raster"];
@@ -468,6 +478,7 @@
                 layer["geometrytype"] = set['geography']['geometry'];
               };
               if ("base" in set.style) layer["base"] = set.style.base;
+              if (set.source.updateFrequency.indexOf("minute") > 0) layer['liveupdate'] = parseInt(set.source.updateFrequency.substring(0,1)) * 60 * 1000;
               setlayer(dataset);
             });
             break;
