@@ -40,8 +40,8 @@ services:
       - pg.env
 
     # expose ports for development
-    ports:
-      - 5434:5432
+    #ports:
+    #  - 5434:5432
 
   pg_gdal:
     image: osgeo/gdal:alpine-normal-latest-amd64
