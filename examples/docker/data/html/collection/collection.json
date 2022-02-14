@@ -246,14 +246,19 @@
           },
           "jams": {
             "line": {
-              "line-color": [ "interpolate", ["linear"], ["get", "level"], 1, "#fecc5c", 5, "#ea2616" ],
-              "line-width": [ "*", ["get", "level"] , 2 ]
+              "line-color": [ "interpolate", ["linear"], ["get", "level"], 2, "#fffcc5", 5, "#ea2616" ],
+              "line-width": [
+                "step", 
+                [ "to-number", ["get", "speed"] ], 
+                12, 
+                2, 10, 5, 8, 9, 6, 12, 4, 16, 2
+              ]
             }
           },
           "irregularities": {
             "line": {
               "line-color": "#a553b7",
-              "line-width": 14
+              "line-width": 15
             }
           }
         }
@@ -438,9 +443,9 @@
                 "/",
                 ["to-number", ["get", "g20prertru"]],
                 ["+", ["to-number", ["get", "g20prertru"]], ["to-number", ["get", "g20predbid"]]]
-              ], 
-              "#cccccc", 0, 
-              "#0000ff", 0.4, "#4400cc", 0.4666, "#880088", 0.5333, "#cc0044", 0.6, "#ff0000"
+              ],
+              "#cccccc", 
+              0, "#0000ff", 0.4, "#4400cc", 0.4666, "#880088", 0.5333, "#cc0044", 0.6, "#ff0000" 
             ],
             "fill-opacity": 0.33
           },
