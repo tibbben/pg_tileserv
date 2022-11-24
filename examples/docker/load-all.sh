@@ -8,7 +8,7 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . "$DIR/pg.env"
 
 # get the metadata collection
-echo "$(jq -c '.collection[]' $DATA_DIR/html/collection/collection.json)" > temp.txt
+echo "$(jq -c '.collection[]' $DATA_DIR/html/collection/geology_collection.json)" > temp.txt
 
 # first download all data
 while read item
