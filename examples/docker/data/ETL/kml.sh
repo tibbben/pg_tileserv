@@ -3,7 +3,7 @@
 kmlfile=${filename%.*}.kml
 if [[ " $(jq 'keys' <<<$source) " =~ "zipfolder" ]]
 then
-kmlfile=$(jq -r '.zipfolder' <<<$source)/${filename%.*}.kml
+  kmlfile=$(jq -r '.zipfolder' <<<$source)/${filename%.*}.kml
 fi
 if [[ " $(jq 'keys' <<<$source) " =~ "flags" ]]
 then

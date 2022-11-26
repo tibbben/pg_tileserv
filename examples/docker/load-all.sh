@@ -31,8 +31,13 @@ do
                 eval "${command[@]}"
                 if [ $(jq -r '.format' <<< $source) == "zip" ] || [ $(jq -r '.format' <<< $source) == "kmz" ]
                 then
-                        echo unzip -of $DATA_DIR/$(jq -r '.filename' <<< $source) -d $DATA_DIR
-                        unzip -of $DATA_DIR/$(jq -r '.filename' <<< $source) -d $DATA_DIR
+			saveto=''
+			if [[ " $(jq 'keys' <<<$source) " =~ "zipfolder" ]]
+			then
+				$saveto=/$(jq -r '.zipfolder' <<<$source)
+			fi
+                        echo unzip -of $DATA_DIR/$(jq -r '.filename' <<< $source) -d $DATA_DIR$saveto
+                        unzip -ou $DATA_DIR/$(jq -r '.filename' <<< $source) -d $DATA_DIR$saveto
                         rm $DATA_DIR/$filename
                 fi
         fi
