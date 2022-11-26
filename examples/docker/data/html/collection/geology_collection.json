@@ -565,7 +565,7 @@
         "format": "geoTIFF",
         "bounds": [[-125.189,32.247],[-113.254,42.181]],
         "monobandpsuedocolor": {
-          "colorramp": "0 white 0\n1 #e5f2ff\n231 #08306b\n255 white 0",
+          "colorramp": "0 white\\n1 229 242 255\\n231 8 48 107\\n255 white",
           "flags": "-alpha"
         }      
       },
