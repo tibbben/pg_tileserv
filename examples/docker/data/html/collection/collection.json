@@ -399,8 +399,10 @@
     { 
       "id": "9",
       "source": {
-        "url": "https://tiles.gdsc.miami.edu/temp/fl_2020.zip",
-        "download": "wget",
+        "url": "https://harvard.dataverse.edu/api/access/datafile/:persistentId/?persistentId=10.7910/DVN/K7760H#",
+        "token": "harvard_dataverse_token",
+        "download": "curl",
+        "flags": "-H X-Dataverse-key:harvard_dataverse_token",
         "filename": "fl_2020.zip",
         "layername": "florida_2020_presidential_election_precincts",
         "nicename": "2020 Presidential Election Southeast FL",
@@ -811,7 +813,7 @@
     { 
       "id": "16",
       "source": {
-        "url": "https://mrdata.usgs.gov/services/wfs/deposit?request=GetCapabilities&service=WFS&version=1.1.0",
+        "url": "https://mrdata.usgs.gov/services/wfs/deposit?service=WFS&version=1.1.0",
         "download": "curl",
         "filename": "deposit.xml",
         "layername": ["mineralpolygons","rareearthoccurences","surfaceworkings"],

@@ -1,3 +1,4 @@
 ssh
 *.pem
 update.log
+secrets/

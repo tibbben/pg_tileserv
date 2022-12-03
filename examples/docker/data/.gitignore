@@ -14,6 +14,13 @@
 *.csv
 *.sql
 *.json
+*.geojson
+*.kml
+*.kmz
+*.png
+*.jpg
+*.txt
+*.html
 
 img/
 avg_annual_precip_ca_1981_2010_800m/

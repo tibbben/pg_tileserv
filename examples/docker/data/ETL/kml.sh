@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
 kmlfile=${filename%.*}.kml
+if [[ " $(jq 'keys' <<<$source) " =~ "zipfile" ]]
+then
+  kmlfile=$(jq -r '.zipfile' <<<$source)
+fi
 if [[ " $(jq 'keys' <<<$source) " =~ "zipfolder" ]]
 then
   kmlfile=$(jq -r '.zipfolder' <<<$source)/${filename%.*}.kml
 fi
+flags=''
 if [[ " $(jq 'keys' <<<$source) " =~ "flags" ]]
 then
   flags=$(jq -r '.flags' <<<$source) 

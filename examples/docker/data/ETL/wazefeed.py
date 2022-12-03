@@ -6,9 +6,8 @@ import sys
 path = sys.argv[1]
 filename = sys.argv[2]
 
-f = open(path+'/'+filename, "r")
-waze = json.loads(f.read())
-f.close()
+with open(path+'/'+filename, encoding='utf-8') as fh:
+    waze = json.load(fh)
 
 layers = {
         "alerts": [],
